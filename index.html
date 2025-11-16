@@ -32,10 +32,11 @@
         line-height: 1.2;
     }
 
+    /* ESCONDE ELEMENTOS DA UI */
     #header-buttons, #auth-container, .border-b, footer, 
     .remove-week-culto-btn, .add-culto-btn, #add-culto-modal, 
     #remove-culto-modal, #tab-saved, #password-confirm-modal,
-    #logo-container { /* Esconder logo na impressão */
+    #logo-container, #month-year-controls, .print-hidden-controls { /* Adicionado #month-year-controls e .print-hidden-controls */
         display: none !important;
     }
 
@@ -80,62 +81,60 @@
         border-bottom: 1px solid #9ca3af !important;
     }
 
-    /* A SOLUÇÃO: Esconde os selects e mostra apenas os valores */
-    select {
-        display: none !important;
-    }
+    /* --- NOVA TENTATIVA DE IMPRESSÃO --- */
+    /* Em vez de esconder selects/inputs, vamos estilizá-los como texto */
     
-    /* Mostra os valores dos selects como texto simples (para Direção, Preleitor) */
-    td:has(select)::after {
-        content: attr(data-print-value);
-        display: block;
-        font-size: 9pt;
-        text-align: center;
-    }
-    
-    /* Para células com múltiplos selects (portaria) */
-    /* Desativa a regra geral acima para a célula de portaria */
-    td.flex-col::after {
-        content: none !important;
-    }
-    
-    /* NOVAS REGRAS: Mostra os valores de portaria 1 e 2 */
-    td.flex-col::before {
-        content: attr(data-print-portaria1);
-        display: block;
-        font-size: 9pt;
-        text-align: center;
-    }
-    
-    td.flex-col::after {
-        content: attr(data-print-portaria2) !important; /* !important para sobrepor o 'none' */
-        display: block;
-        font-size: 9pt;
-        text-align: center;
-        margin-top: 2px;
-    }
-
-    /* Remove bordas e fundos de inputs */
-    input {
-        border: none !important;
+    input, select {
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
         background-color: transparent !important;
+        border: none !important;
         box-shadow: none !important;
         padding: 0 !important;
         margin: 0 !important;
-        appearance: none !important;
-        -webkit-appearance: none !important;
-        -moz-appearance: none !important;
+        color: black !important; /* Garante que o texto seja preto */
+        font-size: 9pt !important;
+        font-family: inherit !important; /* Garante a mesma fonte */
     }
 
-    /* Ajusta inputs para mostrar valores */
+    /* Garante que as opções não sejam impressas */
+    select option {
+        display: none !important;
+    }
+    
+    /* Remove as setas (deve ser coberto pelo appearance:none, mas por via das dúvidas) */
+    select::-ms-expand { display: none !important; }
+    select::-webkit-scrollbar { display: none !important; }
+
+    /* Ajusta inputs de data */
     input[type="date"] {
         display: inline-block !important;
         width: auto !important;
         font-size: 9pt !important;
     }
+    
+    /* Remove ícone de calendário do input[type=date] */
+    input[type="date"]::-webkit-inner-spin-button,
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        display: none !important;
+        -webkit-appearance: none !important;
+    }
+
+    /* Ajusta selects (auto-size não funciona no print) */
+    select.auto-size-select {
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    /* Remove os pseudo-elementos da tentativa anterior */
+    td:has(select)::after { content: none !important; }
+    td.flex-col::before { content: none !important; }
+    td.flex-col::after { content: none !important; }
+
 
     /* Remove grupos e botões de edição */
-    .group, .edit-info-btn, .absolute {
+    .group, .edit-info-btn {
         display: none !important;
     }
 
@@ -146,17 +145,17 @@
         margin-top: 1px !important;
     }
 
-    /* Remove flex containers em células */
-    .flex {
-        display: block !important;
-    }
-
-    .flex-col {
+    /* Ajusta layout de células */
+    .flex, .flex-col {
         display: block !important;
     }
 
     .gap-1, .gap-2 {
         gap: 0 !important;
+    }
+    
+    td.flex-col select:last-child {
+        margin-top: 2px;
     }
 
     /* Ajusta células de portaria */
@@ -303,7 +302,8 @@
                 <!-- View do Editor -->
                 <div id="editor-view">
                     <!-- Controles de Mês e Ano -->
-                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 my-4 p-2">
+                    <!-- ADICIONADO ID AQUI -->
+                    <div id="month-year-controls" class="flex flex-col sm:flex-row justify-center items-center gap-4 my-4 p-2">
                         <div class="w-full sm:w-auto">
                             <label for="month-select" class="font-semibold mr-2 text-sm">Mês:</label>
                             <select id="month-select" class="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></select>
@@ -716,26 +716,12 @@
                 element.style.width = `${textWidthHelper.scrollWidth + 10}px`;
             }
 
-            // NOVA FUNÇÃO: Atualiza os atributos de dados para impressão
+            // FUNÇÃO REMOVIDA
+            /*
             function updatePrintValue(selectElement) {
-                if (!selectElement) return;
-                
-                const selectedText = selectElement.options[selectElement.selectedIndex].text;
-                const parentTd = selectElement.closest('td');
-                if (!parentTd) return;
-
-                if (parentTd.classList.contains('flex-col')) {
-                    // É uma célula de Portaria
-                    const selects = parentTd.querySelectorAll('select');
-                    if (selects.length === 2) {
-                        parentTd.dataset.printPortaria1 = selects[0].options[selects[0].selectedIndex].text;
-                        parentTd.dataset.printPortaria2 = selects[1].options[selects[1].selectedIndex].text;
-                    }
-                } else {
-                    // É uma célula de seleção única (Direção, Preleitor)
-                    parentTd.dataset.printValue = selectedText;
-                }
+                // ...
             }
+            */
 
             function requestPasswordConfirmation(callback) {
                 onPasswordConfirm = callback;
@@ -798,13 +784,13 @@
                     scheduleBody.querySelectorAll(`tr[data-week-index="${currentWeekForModal}"]`).forEach(r => lastRowInWeek = r);
                     lastRowInWeek.insertAdjacentElement('afterend', newRow);
 
-                    // ATUALIZAÇÃO: Garantir que o novo select também tenha os listeners
+                    // ATUALIZAÇÃO: Remover listeners de 'updatePrintValue'
                     newRow.querySelectorAll('select.auto-size-select').forEach(select => {
                         autoSizeSelect(select);
-                        updatePrintValue(select); // Adiciona valor de impressão inicial
+                        // updatePrintValue(select); // REMOVIDO
                         select.addEventListener('change', () => {
                             autoSizeSelect(select);
-                            updatePrintValue(select); // Adiciona valor de impressão na mudança
+                            // updatePrintValue(select); // REMOVIDO
                         });
                     });
                     newRow.querySelector('.edit-info-btn').addEventListener('click', onEditInfoClick);
@@ -891,9 +877,10 @@
                 const createWeekHeader = (weekIndex, weekNameText) => {
                     const row = document.createElement('tr');
                     row.dataset.weekNum = weekIndex;
+                    // ADICIONADO 'print-hidden-controls' AO DIV DOS BOTÕES
                     row.innerHTML = `<td colspan="6" class="bg-blue-200 text-blue-800 font-bold p-2 text-center relative">
                         ${weekNameText}
-                        <div class="absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
+                        <div class="print-hidden-controls absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
                             <button class="remove-week-culto-btn bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-700" data-week-num="${weekIndex}" ${disabledState}>-</button>
                             <button class="add-culto-btn bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-blue-700" data-week-num="${weekIndex}" ${disabledState}>+</button>
                         </div></td>`;
@@ -978,13 +965,13 @@
                     removeCultoModal.style.display = 'flex';
                 }));
                 
-                // ATUALIZAÇÃO: Ligar o autoSizeSelect e o updatePrintValue
+                // ATUALIZAÇÃO: Remover 'updatePrintValue'
                 document.querySelectorAll('select.auto-size-select').forEach(select => {
                     autoSizeSelect(select);
-                    updatePrintValue(select); // Define o valor de impressão inicial
+                    // updatePrintValue(select); // REMOVIDO
                     select.addEventListener('change', () => {
                         autoSizeSelect(select);
-                        updatePrintValue(select); // Atualiza o valor de impressão ao mudar
+                        // updatePrintValue(select); // REMOVIDO
                     });
                 });
 
@@ -997,8 +984,8 @@
                         select.dataset.previousValue = select.value;
                     });
                     select.addEventListener('change', (e) => {
-                        // ATUALIZAÇÃO: Garantir que updatePrintValue seja chamado aqui também
-                        updatePrintValue(e.target);
+                        // ATUALIZAÇÃO: Remover 'updatePrintValue'
+                        // updatePrintValue(e.target); // REMOVIDO
                         
                         const currentSelect = e.target;
                         if (currentSelect.value === '__outro__') {
@@ -1029,11 +1016,11 @@
                                 }
                                 currentSelect.value = trimmedName;
                                 autoSizeSelect(currentSelect);
-                                updatePrintValue(currentSelect); // Atualiza o valor de impressão para o novo nome
+                                // updatePrintValue(currentSelect); // REMOVIDO
                             } else {
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                updatePrintValue(currentSelect); // Atualiza o valor de impressão
+                                // updatePrintValue(currentSelect); // REMOVIDO
                             }
                         } else if (currentSelect.value === '__deletar__') {
                             const nameToDelete = prompt("Digite o nome EXATO do preleitor que deseja deletar:");
@@ -1041,7 +1028,7 @@
                             if (!nameToDelete || nameToDelete.trim() === '') {
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                updatePrintValue(currentSelect); // Atualiza o valor de impressão
+                                // updatePrintValue(currentSelect); // REMOVIDO
                                 return;
                             }
                             
@@ -1051,7 +1038,7 @@
                                 alert("Você não pode deletar a opção 'A DEFINIR'.");
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                updatePrintValue(currentSelect); // Atualiza o valor de impressão
+                                // updatePrintValue(currentSelect); // REMOVIDO
                                 return;
                             }
                             
@@ -1059,7 +1046,7 @@
                                 alert("Você não pode deletar um nome da lista original.");
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                updatePrintValue(currentSelect); // Atualiza o valor de impressão
+                                // updatePrintValue(currentSelect); // REMOVIDO
                                 return;
                             }
                             
@@ -1077,12 +1064,12 @@
                                 alert(`"${trimmedName}" foi removido com sucesso.`);
                                 currentSelect.value = 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                updatePrintValue(currentSelect); // Atualiza o valor de impressão
+                                // updatePrintValue(currentSelect); // REMOVIDO
                             } else {
                                 alert(`Nome "${trimmedName}" não encontrado na lista de nomes cadastrados.`);
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                updatePrintValue(currentSelect); // Atualiza o valor de impressão
+                                // updatePrintValue(currentSelect); // REMOVIDO
                             }
                         }
                     });
