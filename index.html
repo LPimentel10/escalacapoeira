@@ -58,11 +58,49 @@
         border: none !important;
     }
     
-    /* CORREÇÃO PRINCIPAL: Garante que o texto seja visível */
-    body, td, th, select, input, div, span {
+    /* CORREÇÃO PRINCIPAL: Esconde selects e mostra apenas o texto selecionado */
+    select {
+        display: none !important;
+    }
+    
+    /* Mostra o texto selecionado dos selects */
+    select.auto-size-select::after {
+        content: attr(data-print-value);
+        display: block !important;
         color: black !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        font-size: 9pt !important;
+        text-align: center !important;
+    }
+    
+    /* Para células com múltiplos selects (portaria) */
+    td.flex-col::before {
+        content: attr(data-print-value1);
+        display: block !important;
+        color: black !important;
+        font-size: 9pt !important;
+        text-align: center !important;
+    }
+    
+    td.flex-col::after {
+        content: attr(data-print-value2);
+        display: block !important;
+        color: black !important;
+        font-size: 9pt !important;
+        text-align: center !important;
+        margin-top: 2px !important;
+    }
+
+    /* Para inputs de data */
+    input[type="date"] {
+        display: none !important;
+    }
+    
+    input[type="date"]::after {
+        content: attr(data-print-value);
+        display: block !important;
+        color: black !important;
+        font-size: 9pt !important;
+        text-align: center !important;
     }
 
     /* Melhora a aparência dos cabeçalhos */
@@ -88,38 +126,6 @@
         border-bottom: 1px solid #9ca3af !important;
     }
 
-    /* --- ESTILOS PARA INPUTS E SELECTS --- */
-    input, select {
-        -webkit-appearance: none !important;
-        -moz-appearance: none !important;
-        appearance: none !important;
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        color: black !important;
-        font-size: 9pt !important;
-        font-family: inherit !important;
-        width: 100% !important;
-        text-align: center !important;
-    }
-
-    /* Remove setas e ícones */
-    select::-ms-expand { display: none !important; }
-    select::-webkit-scrollbar { display: none !important; }
-    
-    input[type="date"]::-webkit-inner-spin-button,
-    input[type="date"]::-webkit-calendar-picker-indicator {
-        display: none !important;
-        -webkit-appearance: none !important;
-    }
-
-    /* Remove opções dos selects */
-    select option {
-        display: none !important;
-    }
-
     /* Remove grupos e botões de edição */
     .group, .edit-info-btn {
         display: none !important;
@@ -128,7 +134,7 @@
     /* Ajusta informações adicionais */
     [data-info-display] {
         font-size: 8pt !important;
-        color: #4b5563 !important; /* Cor mais escura para melhor legibilidade */
+        color: #6b7280 !important;
         margin-top: 1px !important;
     }
 
@@ -140,14 +146,11 @@
     .gap-1, .gap-2 {
         gap: 0 !important;
     }
-    
-    td.flex-col select:last-child {
-        margin-top: 2px;
-    }
 
     /* Ajusta células de portaria */
     td:has(.flex-col) {
         padding: 1px 2px !important;
+        position: relative !important;
     }
 
     /* Remove espaçamentos excessivos */
@@ -198,12 +201,6 @@
     /* Remove qualquer opacidade */
     .opacity-0, .group-hover\:opacity-100 {
         opacity: 1 !important;
-    }
-
-    /* CORREÇÃO ADICIONAL: Garante que todo texto seja legível */
-    td, th {
-        color: black !important;
-        background-color: transparent !important;
     }
 }
     </style>
@@ -514,6 +511,69 @@
 
 
             // --- LÓGICA DE AUTENTICAÇÃO E BOTÕES ---
+// Função para preparar dados para impressão
+function prepareForPrint() {
+    // Para selects normais
+    document.querySelectorAll('select.auto-size-select').forEach(select => {
+        const selectedOption = select.options[select.selectedIndex];
+        select.setAttribute('data-print-value', selectedOption.text);
+    });
+    
+    // Para células de portaria com dois selects
+    document.querySelectorAll('td.flex-col').forEach(td => {
+        const selects = td.querySelectorAll('select');
+        if (selects.length >= 2) {
+            const value1 = selects[0].options[selects[0].selectedIndex].text;
+            const value2 = selects[1].options[selects[1].selectedIndex].text;
+            td.setAttribute('data-print-value1', value1);
+            td.setAttribute('data-print-value2', value2);
+        }
+    });
+    
+    // Para inputs de data
+    document.querySelectorAll('input[type="date"]').forEach(input => {
+        input.setAttribute('data-print-value', input.value);
+    });
+}
+
+printBtn.addEventListener('click', () => {
+    prepareForPrint();
+    setTimeout(() => {
+        window.print();
+        // Restaurar estado após impressão
+        setTimeout(() => {
+            document.querySelectorAll('[data-print-value]').forEach(el => {
+                el.removeAttribute('data-print-value');
+            });
+            document.querySelectorAll('[data-print-value1], [data-print-value2]').forEach(el => {
+                el.removeAttribute('data-print-value1');
+                el.removeAttribute('data-print-value2');
+            });
+        }, 1000);
+    }, 100);
+});
+
+reportBtn.addEventListener('click', () => {
+    prepareForPrint();
+    setTimeout(() => {
+        window.print();
+        // Restaurar estado após impressão
+        setTimeout(() => {
+            document.querySelectorAll('[data-print-value]').forEach(el => {
+                el.removeAttribute('data-print-value');
+            });
+            document.querySelectorAll('[data-print-value1], [data-print-value2]').forEach(el => {
+                el.removeAttribute('data-print-value1');
+                el.removeAttribute('data-print-value2');
+            });
+        }, 1000);
+    }, 100);
+});
+
+const checkAuth = () => {
+    isLoggedIn = sessionStorage.getItem('escala_loggedin') === 'true';
+    updateAuthUI();
+};
             printBtn.addEventListener('click', () => window.print());
             reportBtn.addEventListener('click', () => window.print()); // NOVO LISTENER
 
