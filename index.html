@@ -97,6 +97,7 @@
          .print-title-container {
     display: flex;
     align-items: center;
+    justify-content: center;
     background: linear-gradient(135deg, #1e40af, #3b82f6) !important;
     color: white !important;
     font-weight: bold !important;
@@ -109,19 +110,16 @@
 }
 
 .print-title {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
     margin: 0 !important;
-    white-space: nowrap;
 }
 
 /* Logo na impressão */
 .print-logo {
     height: 35px;
-    margin-left: 20px;
-    position: relative;
-    z-index: 1;
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
 }
             
             .month-year-reference {
