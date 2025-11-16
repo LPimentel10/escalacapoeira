@@ -370,149 +370,80 @@
                 </tr>`;
 
             // --- LÓGICA DE AUTENTICAÇÃO E BOTÕES ---
-           // Função para preparar dados para impressão - NOVA ABORDAGEM
-function prepareForPrint() {
-    console.log("Preparando para impressão...");
-    
-    // Salvar o conteúdo original
-    const originalScheduleBody = scheduleBody.innerHTML;
-    
-    // Criar uma cópia da tabela para impressão
-    const printClone = scheduleBody.cloneNode(true);
-    
-    // Substituir todos os selects e inputs por texto
-    printClone.querySelectorAll('select').forEach(select => {
-        const selectedOption = select.options[select.selectedIndex];
-        const textNode = document.createTextNode(selectedOption.text);
-        select.parentNode.replaceChild(textNode, select);
-    });
-    
-    printClone.querySelectorAll('input[type="date"]').forEach(input => {
-        const textNode = document.createTextNode(input.value);
-        input.parentNode.replaceChild(textNode, input);
-    });
-    
-    // Remover botões de edição
-    printClone.querySelectorAll('.edit-info-btn, .add-culto-btn, .remove-week-culto-btn').forEach(btn => {
-        btn.remove();
-    });
-    
-    // Substituir o conteúdo original pela versão para impressão
-    scheduleBody.innerHTML = printClone.innerHTML;
-    
-    return originalScheduleBody;
-}
-
-// Função para restaurar o conteúdo original
-function restoreAfterPrint(originalContent) {
-    setTimeout(() => {
-        scheduleBody.innerHTML = originalContent;
-        console.log("Conteúdo restaurado após impressão");
-        
-        // Re-aplicar os event listeners se necessário
-        if (isLoggedIn) {
-            document.querySelectorAll('.edit-info-btn').forEach(btn => {
-                btn.addEventListener('click', onEditInfoClick);
-            });
-        }
-    }, 1000);
-}
-
-printBtn.addEventListener('click', () => {
-    console.log("Botão imprimir clicado");
-    const originalContent = prepareForPrint();
-    
-    // Pequeno delay para garantir que o DOM foi atualizado
-    setTimeout(() => {
-        window.print();
-        restoreAfterPrint(originalContent);
-    }, 100);
-});
-
-reportBtn.addEventListener('click', () => {
-    console.log("Botão relatório clicado");
-    const originalContent = prepareForPrint();
-    
-    // Pequeno delay para garantir que o DOM foi atualizado
-    setTimeout(() => {
-        window.print();
-        restoreAfterPrint(originalContent);
-    }, 100);
-});
+                       // --- LÓGICA DE AUTENTICAÇÃO E BOTÕES ---
+            // Função para preparar dados para impressão
+            function prepareForPrint() {
+                console.log("Preparando para impressão...");
                 
-                // Para células de portaria com dois selects
-                document.querySelectorAll('td.flex-col').forEach(td => {
-                    const selects = td.querySelectorAll('select');
-                    if (selects.length >= 2) {
-                        const value1 = selects[0].options[selects[0].selectedIndex].text;
-                        const value2 = selects[1].options[selects[1].selectedIndex].text;
-                        td.setAttribute('data-print-value1', value1);
-                        td.setAttribute('data-print-value2', value2);
-                    }
+                // Salvar o conteúdo original
+                const originalScheduleBody = scheduleBody.innerHTML;
+                
+                // Criar uma cópia da tabela para impressão
+                const printClone = scheduleBody.cloneNode(true);
+                
+                // Substituir todos os selects e inputs por texto
+                printClone.querySelectorAll('select').forEach(select => {
+                    const selectedOption = select.options[select.selectedIndex];
+                    const textNode = document.createTextNode(selectedOption.text);
+                    select.parentNode.replaceChild(textNode, select);
                 });
                 
-                // Para inputs de data
-                document.querySelectorAll('input[type="date"]').forEach(input => {
-                    const parentTd = input.closest('td');
-                    if (parentTd) {
-                        parentTd.setAttribute('data-print-value', input.value);
-                    }
+                printClone.querySelectorAll('input[type="date"]').forEach(input => {
+                    const textNode = document.createTextNode(input.value);
+                    input.parentNode.replaceChild(textNode, input);
                 });
+                
+                // Remover botões de edição
+                printClone.querySelectorAll('.edit-info-btn, .add-culto-btn, .remove-week-culto-btn').forEach(btn => {
+                    btn.remove();
+                });
+                
+                // Substituir o conteúdo original pela versão para impressão
+                scheduleBody.innerHTML = printClone.innerHTML;
+                
+                return originalScheduleBody;
+            }
+
+            // Função para restaurar o conteúdo original
+            function restoreAfterPrint(originalContent) {
+                setTimeout(() => {
+                    scheduleBody.innerHTML = originalContent;
+                    console.log("Conteúdo restaurado após impressão");
+                    
+                    // Re-aplicar os event listeners se necessário
+                    if (isLoggedIn) {
+                        document.querySelectorAll('.edit-info-btn').forEach(btn => {
+                            btn.addEventListener('click', onEditInfoClick);
+                        });
+                    }
+                }, 1000);
             }
 
             printBtn.addEventListener('click', () => {
-                prepareForPrint();
+                console.log("Botão imprimir clicado");
+                const originalContent = prepareForPrint();
+                
+                // Pequeno delay para garantir que o DOM foi atualizado
                 setTimeout(() => {
                     window.print();
-                    // Restaurar estado após impressão
-                    setTimeout(() => {
-                        document.querySelectorAll('[data-print-value]').forEach(el => {
-                            el.removeAttribute('data-print-value');
-                        });
-                        document.querySelectorAll('[data-print-value1], [data-print-value2]').forEach(el => {
-                            el.removeAttribute('data-print-value1');
-                            el.removeAttribute('data-print-value2');
-                        });
-                    }, 1000);
+                    restoreAfterPrint(originalContent);
                 }, 100);
             });
 
             reportBtn.addEventListener('click', () => {
-                prepareForPrint();
+                console.log("Botão relatório clicado");
+                const originalContent = prepareForPrint();
+                
+                // Pequeno delay para garantir que o DOM foi atualizado
                 setTimeout(() => {
                     window.print();
-                    // Restaurar estado após impressão
-                    setTimeout(() => {
-                        document.querySelectorAll('[data-print-value]').forEach(el => {
-                            el.removeAttribute('data-print-value');
-                        });
-                        document.querySelectorAll('[data-print-value1], [data-print-value2]').forEach(el => {
-                            el.removeAttribute('data-print-value1');
-                            el.removeAttribute('data-print-value2');
-                        });
-                    }, 1000);
+                    restoreAfterPrint(originalContent);
                 }, 100);
             });
 
             const checkAuth = () => {
                 isLoggedIn = sessionStorage.getItem('escala_loggedin') === 'true';
                 updateAuthUI();
-            };
-
-            const updateAuthUI = () => {
-                if(isLoggedIn) {
-                    authBtn.innerHTML = logoutIconSVG;
-                    authBtn.setAttribute('title', 'Sair');
-                    authBtn.classList.replace('bg-green-500', 'bg-red-500');
-                    authBtn.classList.replace('hover:bg-green-600', 'hover:bg-red-600');
-                    saveScheduleBtn.classList.remove('hidden');
-                } else {
-                    authBtn.innerHTML = loginIconSVG;
-                    authBtn.setAttribute('title', 'Login para Editar');
-                    authBtn.classList.replace('bg-red-500', 'bg-green-500');
-                    authBtn.classList.replace('hover:bg-red-600', 'hover:bg-green-600');
-                    saveScheduleBtn.classList.add('hidden');
-                }
             };
             
                     
