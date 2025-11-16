@@ -23,196 +23,46 @@
             background-image: none;
         }
 
-      @media print {
-    body {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        background-color: white;
-        font-size: 10pt;
-        line-height: 1.2;
-    }
-
-    /* ESCONDE ELEMENTOS DA UI */
-    #header-buttons, #auth-container, .border-b, footer, 
-    .remove-week-culto-btn, .add-culto-btn, #add-culto-modal, 
-    #remove-culto-modal, #tab-saved, #password-confirm-modal,
-    #logo-container, #month-year-controls, .print-hidden-controls { /* Adicionado #month-year-controls e .print-hidden-controls */
-        display: none !important;
-    }
-
-    body, #main-content, #main-content > div {
-        padding: 0 !important;
-        margin: 0 !important;
-        width: 100% !important;
-    }
-    
-    #main-content > div {
-        max-width: 100% !important;
-        box-shadow: none !important;
-    }
-
-    /* Remove sombras e bordas arredondadas */
-    .shadow-md, .rounded-t-lg, .rounded-b-lg, .rounded-lg {
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        border: none !important;
-    }
-    
-    /* Melhora a aparência dos cabeçalhos */
-    .bg-blue-500 {
-        background-color: #d1d5db !important;
-        color: black !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    .bg-blue-200 {
-        background-color: #e5e7eb !important;
-        color: black !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-    
-    .table-header-week {
-        background-color: #f3f4f6 !important;
-        color: black !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        border-bottom: 1px solid #9ca3af !important;
-    }
-
-    /* --- NOVA TENTATIVA DE IMPRESSÃO --- */
-    /* Em vez de esconder selects/inputs, vamos estilizá-los como texto */
-    
-    input, select {
-        -webkit-appearance: none !important;
-        -moz-appearance: none !important;
-        appearance: none !important;
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        color: black !important; /* Garante que o texto seja preto */
-        font-size: 9pt !important;
-        font-family: inherit !important; /* Garante a mesma fonte */
-    }
-
-    /* Garante que as opções não sejam impressas */
-    select option {
-        display: none !important;
-    }
-    
-    /* Remove as setas (deve ser coberto pelo appearance:none, mas por via das dúvidas) */
-    select::-ms-expand { display: none !important; }
-    select::-webkit-scrollbar { display: none !important; }
-
-    /* Ajusta inputs de data */
-    input[type="date"] {
-        display: inline-block !important;
-        width: auto !important;
-        font-size: 9pt !important;
-    }
-    
-    /* Remove ícone de calendário do input[type=date] */
-    input[type="date"]::-webkit-inner-spin-button,
-    input[type="date"]::-webkit-calendar-picker-indicator {
-        display: none !important;
-        -webkit-appearance: none !important;
-    }
-
-    /* Ajusta selects (auto-size não funciona no print) */
-    select.auto-size-select {
-        width: 100% !important;
-        text-align: center !important;
-    }
-
-    /* Remove os pseudo-elementos da tentativa anterior */
-    td:has(select)::after { content: none !important; }
-    td.flex-col::before { content: none !important; }
-    td.flex-col::after { content: none !important; }
-
-
-    /* Remove grupos e botões de edição */
-    .group, .edit-info-btn {
-        display: none !important;
-    }
-
-    /* Ajusta informações adicionais */
-    [data-info-display] {
-        font-size: 8pt !important;
-        color: #6b7280 !important;
-        margin-top: 1px !important;
-    }
-
-    /* Ajusta layout de células */
-    .flex, .flex-col {
-        display: block !important;
-    }
-
-    .gap-1, .gap-2 {
-        gap: 0 !important;
-    }
-    
-    td.flex-col select:last-child {
-        margin-top: 2px;
-    }
-
-    /* Ajusta células de portaria */
-    td:has(.flex-col) {
-        padding: 1px 2px !important;
-    }
-
-    /* Remove espaçamentos excessivos */
-    .p-2, .p-4, .p-6, .p-8 {
-        padding: 4px !important;
-    }
-
-    .py-4, .py-2, .py-1 {
-        padding-top: 2px !important;
-        padding-bottom: 2px !important;
-    }
-
-    .px-2, .px-1 {
-        padding-left: 3px !important;
-        padding-right: 3px !important;
-    }
-
-    .my-4, .mb-4, .mb-6 {
-        margin: 5px 0 !important;
-    }
-
-    /* Configuração da página */
-    @page {
-        size: A4 landscape;
-        margin: 10mm;
-    }
-
-    /* Garante que não haja quebras de página dentro das semanas */
-    tr {
-        page-break-inside: avoid;
-        break-inside: avoid;
-    }
-
-    /* Ajusta font weights para melhor legibilidade na impressão */
-    .font-bold {
-        font-weight: 600 !important;
-    }
-
-    .font-semibold {
-        font-weight: 500 !important;
-    }
-
-    /* Remove cores azuis muito claras */
-    .text-blue-700 {
-        color: black !important;
-    }
-
-    /* Remove qualquer opacidade */
-    .opacity-0, .group-hover\:opacity-100 {
-        opacity: 1 !important;
-    }
-}
+        @media print {
+            /* ESCONDE COMPLETAMENTE elementos da UI */
+            #header-buttons, #auth-container, .border-b, footer, 
+            .remove-week-culto-btn, .add-culto-btn, #add-culto-modal, 
+            #remove-culto-modal, #tab-saved, #password-confirm-modal,
+            #logo-container, #month-year-controls, .print-hidden-controls {
+                display: none !important;
+            }
+            
+            /* Remove espaçamentos excessivos */
+            body, #main-content, #main-content > div {
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+            
+            /* Remove sombras e bordas */
+            .shadow-md, .rounded-t-lg, .rounded-b-lg, .rounded-lg {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+            }
+            
+            /* Configuração da página */
+            @page {
+                size: A4 landscape;
+                margin: 10mm;
+            }
+            
+            /* Garante cores legíveis */
+            body {
+                color: black !important;
+                background: white !important;
+                font-size: 10pt;
+            }
+            
+            /* Remove botões de edição (caso algum escape) */
+            .edit-info-btn {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -255,12 +105,10 @@
                 
                 <!-- ****** INSIRA SEU LOGO AQUI ****** -->
                 <div id="logo-container" class="absolute left-4 top-1/2 -translate-y-1/2">
-                    <!-- Substitua "URL_DO_SEU_LOGO_NO_POSTIMAGES" pela URL real da imagem -->
-                    <!-- Ajuste a classe de altura (ex: h-10, h-12) conforme necessário -->
                     <img src="https://i.postimg.cc/NF8psJ8b/adca.png" 
                          alt="Logo" 
                          class="h-10"
-                         onerror="this.style.display='none'"> <!-- Esconde se a imagem falhar ao carregar -->
+                         onerror="this.style.display='none'">
                 </div>
                 <!-- ************************************ -->
                 
@@ -302,7 +150,6 @@
                 <!-- View do Editor -->
                 <div id="editor-view">
                     <!-- Controles de Mês e Ano -->
-                    <!-- ADICIONADO ID AQUI -->
                     <div id="month-year-controls" class="flex flex-col sm:flex-row justify-center items-center gap-4 my-4 p-2">
                         <div class="w-full sm:w-auto">
                             <label for="month-select" class="font-semibold mr-2 text-sm">Mês:</label>
@@ -317,7 +164,6 @@
                     <!-- Tabela da Escala -->
                     <div class="overflow-x-auto p-2">
                         <table class="w-full text-xs sm:text-sm text-center">
-                            <!-- Cabeçalho principal removido daqui -->
                             <tbody id="schedule-body"></tbody>
                         </table>
                     </div>
@@ -434,14 +280,13 @@
         }
         authenticate();
 
-
         document.addEventListener('DOMContentLoaded', function() {
             // --- ELEMENTOS DO DOM ---
             const authContainer = document.getElementById('auth-container');
             const loginForm = document.getElementById('login-form');
             const authBtn = document.getElementById('auth-btn');
             const printBtn = document.getElementById('print-btn');
-            const reportBtn = document.getElementById('report-btn'); // NOVO BOTÃO
+            const reportBtn = document.getElementById('report-btn');
             const cancelLoginBtn = document.getElementById('cancel-login-btn');
             const saveScheduleBtn = document.getElementById('save-schedule-btn');
             const loginError = document.getElementById('login-error');
@@ -519,10 +364,76 @@
                     <th class="px-2 py-2">Preleitor</th>
                 </tr>`;
 
-
             // --- LÓGICA DE AUTENTICAÇÃO E BOTÕES ---
-            printBtn.addEventListener('click', () => window.print());
-            reportBtn.addEventListener('click', () => window.print()); // NOVO LISTENER
+            // Função para preparar dados para impressão
+            function prepareForPrint() {
+                console.log("Preparando para impressão...");
+                
+                // Salvar o conteúdo original
+                const originalScheduleBody = scheduleBody.innerHTML;
+                
+                // Criar uma cópia da tabela para impressão
+                const printClone = scheduleBody.cloneNode(true);
+                
+                // Substituir todos os selects e inputs por texto
+                printClone.querySelectorAll('select').forEach(select => {
+                    const selectedOption = select.options[select.selectedIndex];
+                    const textNode = document.createTextNode(selectedOption.text);
+                    select.parentNode.replaceChild(textNode, select);
+                });
+                
+                printClone.querySelectorAll('input[type="date"]').forEach(input => {
+                    const textNode = document.createTextNode(input.value);
+                    input.parentNode.replaceChild(textNode, input);
+                });
+                
+                // Remover botões de edição
+                printClone.querySelectorAll('.edit-info-btn, .add-culto-btn, .remove-week-culto-btn').forEach(btn => {
+                    btn.remove();
+                });
+                
+                // Substituir o conteúdo original pela versão para impressão
+                scheduleBody.innerHTML = printClone.innerHTML;
+                
+                return originalScheduleBody;
+            }
+
+            // Função para restaurar o conteúdo original
+            function restoreAfterPrint(originalContent) {
+                setTimeout(() => {
+                    scheduleBody.innerHTML = originalContent;
+                    console.log("Conteúdo restaurado após impressão");
+                    
+                    // Re-aplicar os event listeners se necessário
+                    if (isLoggedIn) {
+                        document.querySelectorAll('.edit-info-btn').forEach(btn => {
+                            btn.addEventListener('click', onEditInfoClick);
+                        });
+                    }
+                }, 1000);
+            }
+
+            printBtn.addEventListener('click', () => {
+                console.log("Botão imprimir clicado");
+                const originalContent = prepareForPrint();
+                
+                // Pequeno delay para garantir que o DOM foi atualizado
+                setTimeout(() => {
+                    window.print();
+                    restoreAfterPrint(originalContent);
+                }, 100);
+            });
+
+            reportBtn.addEventListener('click', () => {
+                console.log("Botão relatório clicado");
+                const originalContent = prepareForPrint();
+                
+                // Pequeno delay para garantir que o DOM foi atualizado
+                setTimeout(() => {
+                    window.print();
+                    restoreAfterPrint(originalContent);
+                }, 100);
+            });
 
             const checkAuth = () => {
                 isLoggedIn = sessionStorage.getItem('escala_loggedin') === 'true';
@@ -556,7 +467,11 @@
                 }
             });
 
-            cancelLoginBtn.addEventListener('click', () => { authContainer.classList.add('hidden'); authContainer.classList.remove('flex'); });
+            cancelLoginBtn.addEventListener('click', () => { 
+                authContainer.classList.add('hidden'); 
+                authContainer.classList.remove('flex'); 
+            });
+            
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 loginError.classList.add('hidden');
@@ -591,14 +506,22 @@
             saveScheduleBtn.addEventListener('click', saveScheduleToFirebase);
 
             async function saveScheduleToFirebase() {
-                if (!schedulesCollection) { alert("Erro de conexão com o Firebase."); return; }
+                if (!schedulesCollection) { 
+                    alert("Erro de conexão com o Firebase."); 
+                    return; 
+                }
                 
                 try {
                     const month = parseInt(monthSelect.value);
                     const year = parseInt(yearInput.value);
                     const scheduleId = `${year}-${String(month + 1).padStart(2, '0')}`;
                     
-                    const scheduleData = { month, year, scheduleName: `${months[month]} de ${year}`, weeks: [] };
+                    const scheduleData = { 
+                        month, 
+                        year, 
+                        scheduleName: `${months[month]} de ${year}`, 
+                        weeks: [] 
+                    };
 
                     scheduleBody.querySelectorAll('tr[data-week-num]').forEach(headerRow => {
                         const weekNum = parseInt(headerRow.dataset.weekNum);
@@ -652,16 +575,24 @@
                 const listContainer = document.getElementById('saved-schedules-list');
                 listContainer.innerHTML = '<p class="text-gray-500">Carregando...</p>';
                 try {
-                    await authReady; // Garante que o firebase está pronto
+                    await authReady;
                     const querySnapshot = await getDocs(schedulesCollection);
-                    if (querySnapshot.empty) { listContainer.innerHTML = '<p class="text-gray-500">Nenhuma escala salva.</p>'; return; }
+                    if (querySnapshot.empty) { 
+                        listContainer.innerHTML = '<p class="text-gray-500">Nenhuma escala salva.</p>'; 
+                        return; 
+                    }
                     listContainer.innerHTML = '';
                     querySnapshot.forEach((doc) => {
                         const schedule = doc.data();
                         const el = document.createElement('div');
                         el.className = 'flex justify-between items-center bg-gray-50 p-3 rounded-lg border';
                         
-                        const deleteButtonHtml = isLoggedIn ? `<button data-id="${doc.id}" class="delete-btn bg-red-500 text-white p-2 rounded-full hover:bg-red-600 text-sm"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>` : '';
+                        const deleteButtonHtml = isLoggedIn ? 
+                            `<button data-id="${doc.id}" class="delete-btn bg-red-500 text-white p-2 rounded-full hover:bg-red-600 text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>` : '';
 
                         el.innerHTML = `
                             <span class="font-medium text-gray-800">${schedule.scheduleName}</span>
@@ -671,11 +602,20 @@
                             </div>`;
                         listContainer.appendChild(el);
                     });
-                    listContainer.querySelectorAll('.load-btn').forEach(b => b.addEventListener('click', (e) => loadSpecificSchedule(e.target.dataset.id)));
+                    
+                    listContainer.querySelectorAll('.load-btn').forEach(b => 
+                        b.addEventListener('click', (e) => loadSpecificSchedule(e.target.dataset.id))
+                    );
+                    
                     if (isLoggedIn) {
-                        listContainer.querySelectorAll('.delete-btn').forEach(b => b.addEventListener('click', (e) => deleteSchedule(e.currentTarget.dataset.id)));
+                        listContainer.querySelectorAll('.delete-btn').forEach(b => 
+                            b.addEventListener('click', (e) => deleteSchedule(e.currentTarget.dataset.id))
+                        );
                     }
-                } catch (error) { console.error("Erro ao carregar:", error); listContainer.innerHTML = '<p class="text-red-500">Erro ao carregar.</p>'; }
+                } catch (error) { 
+                    console.error("Erro ao carregar:", error); 
+                    listContainer.innerHTML = '<p class="text-red-500">Erro ao carregar.</p>'; 
+                }
             }
 
             async function loadSpecificSchedule(docId) {
@@ -687,8 +627,13 @@
                         yearInput.value = data.year;
                         renderSchedule(data.year, data.month, data);
                         tabEditor.click();
-                    } else { alert("Escala não encontrada."); }
-                } catch (error) { console.error("Erro ao carregar:", error); alert("Erro ao carregar a escala."); }
+                    } else { 
+                        alert("Escala não encontrada."); 
+                    }
+                } catch (error) { 
+                    console.error("Erro ao carregar:", error); 
+                    alert("Erro ao carregar a escala."); 
+                }
             }
 
             async function deleteSchedule(docId) {
@@ -716,13 +661,6 @@
                 element.style.width = `${textWidthHelper.scrollWidth + 10}px`;
             }
 
-            // FUNÇÃO REMOVIDA
-            /*
-            function updatePrintValue(selectElement) {
-                // ...
-            }
-            */
-
             function requestPasswordConfirmation(callback) {
                 onPasswordConfirm = callback;
                 confirmPasswordInput.value = '';
@@ -738,7 +676,7 @@
                 const currentText = infoDisplay.textContent;
                 const newInfo = prompt("Adicionar/Editar Informação:", currentText);
                 
-                if (newInfo !== null) { // User clicked OK
+                if (newInfo !== null) {
                     infoDisplay.textContent = newInfo.trim();
                 }
             }
@@ -746,11 +684,18 @@
             const addCultoModal = document.getElementById('add-culto-modal');
             const removeCultoModal = document.getElementById('remove-culto-modal');
             let currentWeekForModal = null;
+            
             function setupModalEvents() {
-                document.getElementById('cancel-add-culto').addEventListener('click', () => { addCultoModal.style.display = 'none'; });
-                document.getElementById('cancel-remove-culto').addEventListener('click', () => { removeCultoModal.style.display = 'none'; });
+                document.getElementById('cancel-add-culto').addEventListener('click', () => { 
+                    addCultoModal.style.display = 'none'; 
+                });
+                
+                document.getElementById('cancel-remove-culto').addEventListener('click', () => { 
+                    removeCultoModal.style.display = 'none'; 
+                });
+                
                 document.getElementById('confirm-remove-culto').addEventListener('click', () => {
-                     const performRemoval = () => {
+                    const performRemoval = () => {
                         removeCultoModal.querySelectorAll('input:checked').forEach(cb => {
                             const row = scheduleBody.querySelector(`tr[data-row-id="${cb.value}"]`);
                             if (row) row.remove();
@@ -765,9 +710,13 @@
                         removeCultoModal.style.display = 'none';
                     }
                 });
+                
                 document.getElementById('confirm-add-culto').addEventListener('click', () => {
                     const newDate = document.getElementById('new-culto-date').value;
-                    if (!newDate) { alert("Por favor, selecione uma data."); return; }
+                    if (!newDate) { 
+                        alert("Por favor, selecione uma data."); 
+                        return; 
+                    }
 
                     const dateObj = new Date(newDate + 'T00:00:00');
                     const serviceData = {
@@ -775,7 +724,9 @@
                         day: dayNames[dateObj.getDay()].toUpperCase(),
                         type: document.getElementById('new-culto-type').value,
                         info: '',
-                        portaria: 'A DEFINIR', direcao: 'A DEFINIR', preleitor: 'A DEFINIR'
+                        portaria: 'A DEFINIR', 
+                        direcao: 'A DEFINIR', 
+                        preleitor: 'A DEFINIR'
                     };
                     
                     const disabledState = isLoggedIn ? '' : 'disabled';
@@ -784,16 +735,16 @@
                     scheduleBody.querySelectorAll(`tr[data-week-index="${currentWeekForModal}"]`).forEach(r => lastRowInWeek = r);
                     lastRowInWeek.insertAdjacentElement('afterend', newRow);
 
-                    // ATUALIZAÇÃO: Remover listeners de 'updatePrintValue'
                     newRow.querySelectorAll('select.auto-size-select').forEach(select => {
                         autoSizeSelect(select);
-                        // updatePrintValue(select); // REMOVIDO
                         select.addEventListener('change', () => {
                             autoSizeSelect(select);
-                            // updatePrintValue(select); // REMOVIDO
                         });
                     });
-                    newRow.querySelector('.edit-info-btn').addEventListener('click', onEditInfoClick);
+                    
+                    if (isLoggedIn) {
+                        newRow.querySelector('.edit-info-btn').addEventListener('click', onEditInfoClick);
+                    }
                     
                     addCultoModal.style.display = 'none';
                 });
@@ -819,11 +770,11 @@
 
             // --- FUNÇÃO PRINCIPAL DE RENDERIZAÇÃO ---
             function createServiceRow(weekIndex, service, disabledState) {
-                 const rowId = `row-${Date.now()}-${Math.random()}`;
-                 const row = document.createElement('tr');
-                 row.className = 'border-b border-gray-200 hover:bg-gray-50';
-                 row.dataset.rowId = rowId;
-                 row.dataset.weekIndex = weekIndex;
+                const rowId = `row-${Date.now()}-${Math.random()}`;
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-200 hover:bg-gray-50';
+                row.dataset.rowId = rowId;
+                row.dataset.weekIndex = weekIndex;
 
                 const createSelectForRole = (names, selectedValue, classes = '', role = '') => {
                     let optionsHtml = '';
@@ -848,9 +799,11 @@
                 const portariaParts = service.portaria.includes('/') 
                     ? service.portaria.split('/').map(s => s.trim()) 
                     : [service.portaria.trim(), 'A DEFINIR'];
-                 
-                 row.innerHTML = `
-                    <td class="px-2 py-1"><input type="date" class="p-1 border-0 rounded w-full date-input" value="${service.date}" data-row-id="${rowId}" ${disabledState}></td>
+                
+                row.innerHTML = `
+                    <td class="px-2 py-1">
+                        <input type="date" class="p-1 border-0 rounded w-full date-input" value="${service.date}" data-row-id="${rowId}" ${disabledState}>
+                    </td>
                     <td id="day-cell-${rowId}" class="px-2 py-1">${service.day}</td>
                     <td class="px-2 py-1 font-semibold text-blue-700 relative group">
                         <div data-type>${service.type}</div>
@@ -867,7 +820,8 @@
                     </td>
                     <td class="px-1 py-1">${createSelectForRole(staffNames, service.direcao, '', 'direcao')}</td>
                     <td class="px-1 py-1">${createSelectForRole(staffNames, service.preleitor, 'font-semibold', 'preleitor')}</td>`;
-                 return row;
+                
+                return row;
             }
 
             function renderSchedule(year, month, scheduleData = null) {
@@ -877,13 +831,14 @@
                 const createWeekHeader = (weekIndex, weekNameText) => {
                     const row = document.createElement('tr');
                     row.dataset.weekNum = weekIndex;
-                    // ADICIONADO 'print-hidden-controls' AO DIV DOS BOTÕES
-                    row.innerHTML = `<td colspan="6" class="bg-blue-200 text-blue-800 font-bold p-2 text-center relative">
-                        ${weekNameText}
-                        <div class="print-hidden-controls absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
-                            <button class="remove-week-culto-btn bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-700" data-week-num="${weekIndex}" ${disabledState}>-</button>
-                            <button class="add-culto-btn bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-blue-700" data-week-num="${weekIndex}" ${disabledState}>+</button>
-                        </div></td>`;
+                    row.innerHTML = `
+                        <td colspan="6" class="bg-blue-200 text-blue-800 font-bold p-2 text-center relative">
+                            ${weekNameText}
+                            <div class="print-hidden-controls absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
+                                <button class="remove-week-culto-btn bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-700" data-week-num="${weekIndex}" ${disabledState}>-</button>
+                                <button class="add-culto-btn bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-blue-700" data-week-num="${weekIndex}" ${disabledState}>+</button>
+                            </div>
+                        </td>`;
                     
                     const headerRow = document.createElement('tr');
                     headerRow.innerHTML = weekHeaderHTML;
@@ -896,7 +851,7 @@
                     scheduleData.weeks.forEach((week, weekIndex) => {
                         createWeekHeader(weekIndex, week.weekName);
                         if(week.services) {
-                           week.services.forEach(service => scheduleBody.appendChild(createServiceRow(weekIndex, service, disabledState)));
+                            week.services.forEach(service => scheduleBody.appendChild(createServiceRow(weekIndex, service, disabledState)));
                         }
                     });
                 } else {
@@ -918,9 +873,12 @@
                                 
                                 let serviceData = {
                                     date: date.toISOString().split('T')[0],
-                                    day: dayNames[dayOfWeek].toUpperCase(), type,
+                                    day: dayNames[dayOfWeek].toUpperCase(), 
+                                    type,
                                     info: '',
-                                    portaria: 'A DEFINIR', direcao: 'A DEFINIR', preleitor: 'A DEFINIR'
+                                    portaria: 'A DEFINIR', 
+                                    direcao: 'A DEFINIR', 
+                                    preleitor: 'A DEFINIR'
                                 };
                                 
                                 if (month === 9 && octoberData[weekIndex] && octoberData[weekIndex][dayOfWeek]) {
@@ -933,6 +891,7 @@
                                 weekRows.push(createServiceRow(weekIndex, serviceData, disabledState));
                             }
                         });
+                        
                         if (weekRows.length > 0) {
                             const name = `${weekNames[weekIndex]} SEMANA DE ${months[month].toUpperCase()}`;
                             createWeekHeader(weekIndex, name);
@@ -947,46 +906,50 @@
                     const date = new Date(e.target.value + 'T00:00:00');
                     cell.textContent = dayNames[date.getDay()].toUpperCase();
                 }));
+                
                 document.querySelectorAll('.add-culto-btn').forEach(b => b.addEventListener('click', (e) => {
                     currentWeekForModal = e.currentTarget.dataset.weekNum;
                     addCultoModal.style.display = 'flex';
                 }));
+                
                 document.querySelectorAll('.remove-week-culto-btn').forEach(b => b.addEventListener('click', (e) => {
                     currentWeekForModal = e.currentTarget.dataset.weekNum;
                     const list = document.getElementById('remove-culto-list');
                     list.innerHTML = '';
                     scheduleBody.querySelectorAll(`tr[data-week-index="${currentWeekForModal}"]`).forEach(row => {
                         const cells = row.querySelectorAll('td');
-                        list.innerHTML += `<label class="flex items-center gap-2"><input type="checkbox" value="${row.dataset.rowId}">${cells[2].querySelector('[data-type]').textContent} (${cells[0].querySelector('input').value})</label>`;
+                        list.innerHTML += `
+                            <label class="flex items-center gap-2">
+                                <input type="checkbox" value="${row.dataset.rowId}">
+                                ${cells[2].querySelector('[data-type]').textContent} (${cells[0].querySelector('input').value})
+                            </label>`;
                     });
+                    
                     if (list.innerHTML === '') {
                         list.innerHTML = '<p class="text-gray-500">Nenhum culto para remover nesta semana.</p>';
                     }
                     removeCultoModal.style.display = 'flex';
                 }));
                 
-                // ATUALIZAÇÃO: Remover 'updatePrintValue'
                 document.querySelectorAll('select.auto-size-select').forEach(select => {
                     autoSizeSelect(select);
-                    // updatePrintValue(select); // REMOVIDO
                     select.addEventListener('change', () => {
                         autoSizeSelect(select);
-                        // updatePrintValue(select); // REMOVIDO
                     });
                 });
 
-                document.querySelectorAll('.edit-info-btn').forEach(btn => {
-                    btn.addEventListener('click', onEditInfoClick);
-                });
+                if (isLoggedIn) {
+                    document.querySelectorAll('.edit-info-btn').forEach(btn => {
+                        btn.addEventListener('click', onEditInfoClick);
+                    });
+                }
                 
                 document.querySelectorAll('select[data-role="preleitor"]').forEach(select => {
                     select.addEventListener('focus', () => {
                         select.dataset.previousValue = select.value;
                     });
+                    
                     select.addEventListener('change', (e) => {
-                        // ATUALIZAÇÃO: Remover 'updatePrintValue'
-                        // updatePrintValue(e.target); // REMOVIDO
-                        
                         const currentSelect = e.target;
                         if (currentSelect.value === '__outro__') {
                             const newName = prompt("Digite o nome do novo preleitor:");
@@ -999,28 +962,25 @@
                                     
                                     document.querySelectorAll('select').forEach(s => {
                                         if (s.dataset.role === 'preleitor' || s.dataset.role === 'portaria' || s.dataset.role === 'direcao') {
-                                             const newOption = new Option(trimmedName, trimmedName);
-                                             if (s.querySelector('option[value="__outro__"]')) {
-                                                s.add(newOption, s.options[s.options.length - 2]); // Antes de "Adicionar" e "Deletar"
-                                             } else {
+                                            const newOption = new Option(trimmedName, trimmedName);
+                                            if (s.querySelector('option[value="__outro__"]')) {
+                                                s.add(newOption, s.options[s.options.length - 2]);
+                                            } else {
                                                 s.add(newOption);
-                                                // Re-sort options se não for preleitor
                                                 if (s.dataset.role !== 'preleitor') {
                                                     Array.from(s.options)
                                                         .sort((a, b) => a.text.localeCompare(b.text))
                                                         .forEach(option => s.add(option));
                                                 }
-                                             }
+                                            }
                                         }
                                     });
                                 }
                                 currentSelect.value = trimmedName;
                                 autoSizeSelect(currentSelect);
-                                // updatePrintValue(currentSelect); // REMOVIDO
                             } else {
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                // updatePrintValue(currentSelect); // REMOVIDO
                             }
                         } else if (currentSelect.value === '__deletar__') {
                             const nameToDelete = prompt("Digite o nome EXATO do preleitor que deseja deletar:");
@@ -1028,7 +988,6 @@
                             if (!nameToDelete || nameToDelete.trim() === '') {
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                // updatePrintValue(currentSelect); // REMOVIDO
                                 return;
                             }
                             
@@ -1038,7 +997,6 @@
                                 alert("Você não pode deletar a opção 'A DEFINIR'.");
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                // updatePrintValue(currentSelect); // REMOVIDO
                                 return;
                             }
                             
@@ -1046,13 +1004,12 @@
                                 alert("Você não pode deletar um nome da lista original.");
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                // updatePrintValue(currentSelect); // REMOVIDO
                                 return;
                             }
                             
                             const index = staffNames.indexOf(trimmedName);
                             if (index > -1) {
-                                staffNames.splice(index, 1); // Remove from master list
+                                staffNames.splice(index, 1);
                                 
                                 document.querySelectorAll('select[data-role="portaria"], select[data-role="direcao"], select[data-role="preleitor"]').forEach(s => {
                                     const optionToRemove = s.querySelector(`option[value="${trimmedName}"]`);
@@ -1064,12 +1021,10 @@
                                 alert(`"${trimmedName}" foi removido com sucesso.`);
                                 currentSelect.value = 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                // updatePrintValue(currentSelect); // REMOVIDO
                             } else {
                                 alert(`Nome "${trimmedName}" não encontrado na lista de nomes cadastrados.`);
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                // updatePrintValue(currentSelect); // REMOVIDO
                             }
                         }
                     });
@@ -1087,7 +1042,7 @@
                 monthSelect.value = currentMonth;
                 yearInput.value = currentYear;
                 
-                await authReady; // Espera a autenticação do Firebase
+                await authReady;
                 
                 const scheduleId = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
                 let savedData = null;
