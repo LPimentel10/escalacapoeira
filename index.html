@@ -24,181 +24,45 @@
         }
 
         @media print {
-            body {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                background-color: white;
-                font-size: 10pt;
-                line-height: 1.2;
-            }
-
-            /* ESCONDE ELEMENTOS DA UI */
-            #header-buttons, #auth-container, .border-b, footer, 
-            .remove-week-culto-btn, .add-culto-btn, #add-culto-modal, 
-            #remove-culto-modal, #tab-saved, #password-confirm-modal,
-            #logo-container, #month-year-controls, .print-hidden-controls {
-                display: none !important;
-            }
-
-            body, #main-content, #main-content > div {
-                padding: 0 !important;
-                margin: 0 !important;
-                width: 100% !important;
-            }
-            
-            #main-content > div {
-                max-width: 100% !important;
-                box-shadow: none !important;
-            }
-
-            /* Remove sombras e bordas arredondadas */
-            .shadow-md, .rounded-t-lg, .rounded-b-lg, .rounded-lg {
-                box-shadow: none !important;
-                border-radius: 0 !important;
-                border: none !important;
-            }
-            
-            /* CORREÇÃO PRINCIPAL: Esconde selects e mostra apenas o texto selecionado */
-            select, input[type="date"] {
-                display: none !important;
-            }
-            
-            /* Mostra o texto selecionado dos selects */
-            td:has(select)::after {
-                content: attr(data-print-value);
-                display: block !important;
-                color: black !important;
-                font-size: 9pt !important;
-                text-align: center !important;
-            }
-            
-            /* Para células com múltiplos selects (portaria) */
-            td.flex-col::before {
-                content: attr(data-print-value1);
-                display: block !important;
-                color: black !important;
-                font-size: 9pt !important;
-                text-align: center !important;
-            }
-            
-            td.flex-col::after {
-                content: attr(data-print-value2);
-                display: block !important;
-                color: black !important;
-                font-size: 9pt !important;
-                text-align: center !important;
-                margin-top: 2px !important;
-            }
-
-            /* Para inputs de data */
-            td:has(input[type="date"])::after {
-                content: attr(data-print-value);
-                display: block !important;
-                color: black !important;
-                font-size: 9pt !important;
-                text-align: center !important;
-            }
-
-            /* Melhora a aparência dos cabeçalhos */
-            .bg-blue-500 {
-                background-color: #d1d5db !important;
-                color: black !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            .bg-blue-200 {
-                background-color: #e5e7eb !important;
-                color: black !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            
-            .table-header-week {
-                background-color: #f3f4f6 !important;
-                color: black !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                border-bottom: 1px solid #9ca3af !important;
-            }
-
-            /* Remove grupos e botões de edição */
-            .group, .edit-info-btn {
-                display: none !important;
-            }
-
-            /* Ajusta informações adicionais */
-            [data-info-display] {
-                font-size: 8pt !important;
-                color: #6b7280 !important;
-                margin-top: 1px !important;
-            }
-
-            /* Ajusta layout de células */
-            .flex, .flex-col {
-                display: block !important;
-            }
-
-            .gap-1, .gap-2 {
-                gap: 0 !important;
-            }
-
-            /* Ajusta células de portaria */
-            td:has(.flex-col) {
-                padding: 1px 2px !important;
-                position: relative !important;
-            }
-
-            /* Remove espaçamentos excessivos */
-            .p-2, .p-4, .p-6, .p-8 {
-                padding: 4px !important;
-            }
-
-            .py-4, .py-2, .py-1 {
-                padding-top: 2px !important;
-                padding-bottom: 2px !important;
-            }
-
-            .px-2, .px-1 {
-                padding-left: 3px !important;
-                padding-right: 3px !important;
-            }
-
-            .my-4, .mb-4, .mb-6 {
-                margin: 5px 0 !important;
-            }
-
-            /* Configuração da página */
-            @page {
-                size: A4 landscape;
-                margin: 10mm;
-            }
-
-            /* Garante que não haja quebras de página dentro das semanas */
-            tr {
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
-
-            /* Ajusta font weights para melhor legibilidade na impressão */
-            .font-bold {
-                font-weight: 600 !important;
-            }
-
-            .font-semibold {
-                font-weight: 500 !important;
-            }
-
-            /* Remove cores azuis muito claras */
-            .text-blue-700 {
-                color: black !important;
-            }
-
-            /* Remove qualquer opacidade */
-            .opacity-0, .group-hover\:opacity-100 {
-                opacity: 1 !important;
-            }
-        }
+    /* ESCONDE COMPLETAMENTE elementos da UI */
+    #header-buttons, #auth-container, .border-b, footer, 
+    .remove-week-culto-btn, .add-culto-btn, #add-culto-modal, 
+    #remove-culto-modal, #tab-saved, #password-confirm-modal,
+    #logo-container, #month-year-controls, .print-hidden-controls {
+        display: none !important;
+    }
+    
+    /* Remove espaçamentos excessivos */
+    body, #main-content, #main-content > div {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+    
+    /* Remove sombras e bordas */
+    .shadow-md, .rounded-t-lg, .rounded-b-lg, .rounded-lg {
+        box-shadow: none !important;
+        border-radius: 0 !important;
+    }
+    
+    /* Configuração da página */
+    @page {
+        size: A4 landscape;
+        margin: 10mm;
+    }
+    
+    /* Garante cores legíveis */
+    body {
+        color: black !important;
+        background: white !important;
+        font-size: 10pt;
+    }
+    
+    /* Remove botões de edição (caso algum escape) */
+    .edit-info-btn {
+        display: none !important;
+    }
+}
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -506,16 +370,75 @@
                 </tr>`;
 
             // --- LÓGICA DE AUTENTICAÇÃO E BOTÕES ---
-            // Função para preparar dados para impressão
-            function prepareForPrint() {
-                // Para selects normais
-                document.querySelectorAll('select.auto-size-select').forEach(select => {
-                    const selectedOption = select.options[select.selectedIndex];
-                    const parentTd = select.closest('td');
-                    if (parentTd) {
-                        parentTd.setAttribute('data-print-value', selectedOption.text);
-                    }
-                });
+           // Função para preparar dados para impressão - NOVA ABORDAGEM
+function prepareForPrint() {
+    console.log("Preparando para impressão...");
+    
+    // Salvar o conteúdo original
+    const originalScheduleBody = scheduleBody.innerHTML;
+    
+    // Criar uma cópia da tabela para impressão
+    const printClone = scheduleBody.cloneNode(true);
+    
+    // Substituir todos os selects e inputs por texto
+    printClone.querySelectorAll('select').forEach(select => {
+        const selectedOption = select.options[select.selectedIndex];
+        const textNode = document.createTextNode(selectedOption.text);
+        select.parentNode.replaceChild(textNode, select);
+    });
+    
+    printClone.querySelectorAll('input[type="date"]').forEach(input => {
+        const textNode = document.createTextNode(input.value);
+        input.parentNode.replaceChild(textNode, input);
+    });
+    
+    // Remover botões de edição
+    printClone.querySelectorAll('.edit-info-btn, .add-culto-btn, .remove-week-culto-btn').forEach(btn => {
+        btn.remove();
+    });
+    
+    // Substituir o conteúdo original pela versão para impressão
+    scheduleBody.innerHTML = printClone.innerHTML;
+    
+    return originalScheduleBody;
+}
+
+// Função para restaurar o conteúdo original
+function restoreAfterPrint(originalContent) {
+    setTimeout(() => {
+        scheduleBody.innerHTML = originalContent;
+        console.log("Conteúdo restaurado após impressão");
+        
+        // Re-aplicar os event listeners se necessário
+        if (isLoggedIn) {
+            document.querySelectorAll('.edit-info-btn').forEach(btn => {
+                btn.addEventListener('click', onEditInfoClick);
+            });
+        }
+    }, 1000);
+}
+
+printBtn.addEventListener('click', () => {
+    console.log("Botão imprimir clicado");
+    const originalContent = prepareForPrint();
+    
+    // Pequeno delay para garantir que o DOM foi atualizado
+    setTimeout(() => {
+        window.print();
+        restoreAfterPrint(originalContent);
+    }, 100);
+});
+
+reportBtn.addEventListener('click', () => {
+    console.log("Botão relatório clicado");
+    const originalContent = prepareForPrint();
+    
+    // Pequeno delay para garantir que o DOM foi atualizado
+    setTimeout(() => {
+        window.print();
+        restoreAfterPrint(originalContent);
+    }, 100);
+});
                 
                 // Para células de portaria com dois selects
                 document.querySelectorAll('td.flex-col').forEach(td => {
