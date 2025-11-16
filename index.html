@@ -28,7 +28,8 @@
             #header-buttons, #auth-container, .border-b, footer, 
             .remove-week-culto-btn, .add-culto-btn, #add-culto-modal, 
             #remove-culto-modal, #tab-saved, #password-confirm-modal,
-            #logo-container, #month-year-controls, .print-hidden-controls {
+            #logo-container, #month-year-controls, .print-hidden-controls,
+            #editor-view > div:first-child {
                 display: none !important;
             }
             
@@ -58,7 +59,7 @@
                 font-size: 10pt;
             }
             
-            /* Remove botões de edição (caso algum escape) */
+            /* Remove botões de edição */
             .edit-info-btn {
                 display: none !important;
             }
@@ -67,22 +68,25 @@
             table {
                 width: 100% !important;
                 border-collapse: collapse !important;
+                border: 1px solid #000 !important;
             }
             
             /* Estilo para os valores de texto na impressão */
             .print-text-value {
                 display: inline-block !important;
-                min-width: 80px;
+                padding: 2px 4px !important;
                 font-weight: 500;
             }
             
             /* Garante que todas as células da tabela sejam visíveis */
             td, th {
-                border: 1px solid #ddd !important;
-                padding: 4px !important;
+                border: 1px solid #000 !important;
+                padding: 6px 4px !important;
                 font-size: 10pt !important;
                 background: white !important;
                 color: black !important;
+                text-align: center !important;
+                vertical-align: middle !important;
             }
             
             /* Remove qualquer elemento que possa estar sobrepondo */
@@ -91,22 +95,58 @@
             }
             
             /* Garante que o conteúdo principal ocupe toda a página */
-            #main-content {
+            #main-content, #editor-view, .overflow-x-auto {
                 margin: 0 !important;
                 padding: 0 !important;
                 width: 100% !important;
+                display: block !important;
             }
             
             /* Melhora a legibilidade dos cabeçalhos */
-            .bg-blue-500, .bg-blue-200 {
-                background: #e0e0e0 !important;
+            .bg-blue-500, .bg-blue-200, .table-header-week {
+                background: #f0f0f0 !important;
                 color: black !important;
+                font-weight: bold !important;
+                border: 1px solid #000 !important;
             }
             
             /* Garante que spans de texto sejam visíveis */
             span {
                 display: inline !important;
             }
+            
+            /* Remove flex containers que podem quebrar o layout */
+            .flex {
+                display: block !important;
+            }
+            
+            /* Garante que inputs sejam convertidos corretamente */
+            input, select {
+                display: none !important;
+            }
+            
+            /* Mostra os spans de substituição */
+            .print-text-value {
+                display: inline-block !important;
+            }
+            
+            /* Estilo para cabeçalhos de semana */
+            [data-week-num] {
+                background: #e0e0e0 !important;
+                color: black !important;
+                font-weight: bold !important;
+                font-size: 11pt !important;
+            }
+            
+            /* Remove hover effects */
+            .hover\:bg-gray-50:hover {
+                background: white !important;
+            }
+        }
+        
+        /* Helper para debug */
+        .print-helper {
+            display: none;
         }
     </style>
 </head>
@@ -208,7 +248,7 @@
 
                     <!-- Tabela da Escala -->
                     <div class="overflow-x-auto p-2">
-                        <table class="w-full text-xs sm:text-sm text-center">
+                        <table class="w-full text-xs sm:text-sm text-center border-collapse border border-gray-300">
                             <tbody id="schedule-body"></tbody>
                         </table>
                     </div>
@@ -352,6 +392,7 @@
             // --- ESTADO DA APLICAÇÃO ---
             let isLoggedIn = false;
             let onPasswordConfirm = null;
+            let originalScheduleContent = null;
 
             // --- CONSTANTES ---
             const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
@@ -401,104 +442,152 @@
             const logoutIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>`;
             const weekHeaderHTML = `
                 <tr class="bg-blue-500 text-white uppercase tracking-wider text-xs sm:text-sm table-header-week">
-                    <th class="px-2 py-2">Data</th>
-                    <th class="px-2 py-2">Dia</th>
-                    <th class="px-2 py-2">Culto</th>
-                    <th class="px-2 py-2">Portaria</th>
-                    <th class="px-2 py-2">Direção</th>
-                    <th class="px-2 py-2">Preleitor</th>
+                    <th class="px-2 py-2 border border-gray-300">Data</th>
+                    <th class="px-2 py-2 border border-gray-300">Dia</th>
+                    <th class="px-2 py-2 border border-gray-300">Culto</th>
+                    <th class="px-2 py-2 border border-gray-300">Portaria</th>
+                    <th class="px-2 py-2 border border-gray-300">Direção</th>
+                    <th class="px-2 py-2 border border-gray-300">Preleitor</th>
                 </tr>`;
 
-            // --- FUNÇÕES DE IMPRESSÃO CORRIGIDAS ---
+            // --- FUNÇÕES DE IMPRESSÃO COMPLETAMENTE REESCRITAS ---
             function prepareForPrint() {
-                console.log("Preparando para impressão...");
+                console.log("🖨️ Preparando para impressão...");
                 
                 // Salvar o conteúdo original
-                const originalScheduleBody = scheduleBody.innerHTML;
+                originalScheduleContent = scheduleBody.innerHTML;
                 
-                // Criar uma cópia mais robusta da tabela
-                const printClone = scheduleBody.cloneNode(true);
+                // Criar uma cópia profunda do elemento
+                const printContainer = document.createElement('div');
+                printContainer.innerHTML = scheduleBody.innerHTML;
                 
-                // Substituir todos os selects por texto
-                printClone.querySelectorAll('select').forEach(select => {
+                // Processar todos os selects
+                printContainer.querySelectorAll('select').forEach(select => {
                     const selectedOption = select.options[select.selectedIndex];
+                    const displayValue = selectedOption ? selectedOption.text : 'N/A';
+                    
                     const textSpan = document.createElement('span');
                     textSpan.className = 'print-text-value';
-                    textSpan.textContent = selectedOption.text;
-                    textSpan.style.display = 'inline-block';
-                    textSpan.style.minWidth = '80px';
+                    textSpan.textContent = displayValue;
+                    textSpan.style.cssText = 'display: inline-block; padding: 2px 4px; font-weight: 500;';
+                    
                     select.parentNode.replaceChild(textSpan, select);
                 });
                 
-                // Substituir inputs de data
-                printClone.querySelectorAll('input[type="date"]').forEach(input => {
+                // Processar todos os inputs de data
+                printContainer.querySelectorAll('input[type="date"]').forEach(input => {
                     const textSpan = document.createElement('span');
                     textSpan.className = 'print-text-value';
-                    textSpan.textContent = input.value;
+                    textSpan.textContent = input.value || 'N/A';
+                    textSpan.style.cssText = 'display: inline-block; padding: 2px 4px; font-weight: 500;';
+                    
                     input.parentNode.replaceChild(textSpan, input);
                 });
                 
-                // Remover completamente botões de edição
-                printClone.querySelectorAll('.edit-info-btn, .add-culto-btn, .remove-week-culto-btn, .print-hidden-controls').forEach(btn => {
-                    btn.remove();
+                // Remover completamente todos os botões e controles
+                printContainer.querySelectorAll('.edit-info-btn, .add-culto-btn, .remove-week-culto-btn, .print-hidden-controls, button').forEach(element => {
+                    element.remove();
                 });
                 
-                // Substituir o conteúdo original pela versão para impressão
-                scheduleBody.innerHTML = printClone.innerHTML;
+                // Aplicar estilos de impressão diretamente
+                printContainer.querySelectorAll('td, th').forEach(cell => {
+                    cell.style.border = '1px solid #000 !important';
+                    cell.style.padding = '6px 4px !important';
+                    cell.style.fontSize = '10pt !important';
+                    cell.style.background = 'white !important';
+                    cell.style.color = 'black !important';
+                    cell.style.textAlign = 'center !important';
+                });
                 
-                return originalScheduleBody;
+                printContainer.querySelectorAll('.bg-blue-200, [data-week-num]').forEach(header => {
+                    header.style.background = '#e0e0e0 !important';
+                    header.style.color = 'black !important';
+                    header.style.fontWeight = 'bold !important';
+                });
+                
+                printContainer.querySelectorAll('.table-header-week, .bg-blue-500').forEach(header => {
+                    header.style.background = '#f0f0f0 !important';
+                    header.style.color = 'black !important';
+                    header.style.fontWeight = 'bold !important';
+                });
+                
+                // Substituir o conteúdo original
+                scheduleBody.innerHTML = printContainer.innerHTML;
+                
+                console.log("✅ Preparação para impressão concluída");
+                return originalScheduleContent;
             }
 
             function restoreAfterPrint(originalContent) {
-                // Usar evento afterprint para garantir que a restauração aconteça após a impressão
-                const restoreHandler = () => {
-                    scheduleBody.innerHTML = originalContent;
-                    console.log("Conteúdo restaurado após impressão");
-                    
-                    // Re-aplicar os event listeners se necessário
-                    if (isLoggedIn) {
-                        document.querySelectorAll('.edit-info-btn').forEach(btn => {
-                            btn.addEventListener('click', onEditInfoClick);
-                        });
-                    }
-                    
-                    // Remover o event listener após uso
-                    window.removeEventListener('afterprint', restoreHandler);
-                };
+                console.log("🔄 Restaurando conteúdo original...");
                 
-                window.addEventListener('afterprint', restoreHandler);
-                
-                // Backup: também restaurar após 3 segundos (caso afterprint não funcione)
-                setTimeout(() => {
+                const restoreContent = () => {
                     if (scheduleBody.innerHTML !== originalContent) {
                         scheduleBody.innerHTML = originalContent;
-                        console.log("Restauração por timeout");
+                        console.log("✅ Conteúdo restaurado com sucesso");
+                        
+                        // Re-aplicar event listeners se necessário
+                        if (isLoggedIn) {
+                            reattachEventListeners();
+                        }
                     }
-                }, 3000);
+                };
+                
+                // Usar afterprint se disponível
+                if ('onafterprint' in window) {
+                    const handler = () => {
+                        restoreContent();
+                        window.removeEventListener('afterprint', handler);
+                    };
+                    window.addEventListener('afterprint', handler);
+                }
+                
+                // Backup: restaurar após um tempo
+                setTimeout(restoreContent, 1000);
+            }
+
+            function reattachEventListeners() {
+                // Re-aplicar listeners para elementos editáveis
+                document.querySelectorAll('.edit-info-btn').forEach(btn => {
+                    btn.addEventListener('click', onEditInfoClick);
+                });
+                
+                document.querySelectorAll('.date-input').forEach(input => {
+                    input.addEventListener('change', (e) => {
+                        const cell = document.getElementById(`day-cell-${e.target.dataset.rowId}`);
+                        const date = new Date(e.target.value + 'T00:00:00');
+                        cell.textContent = dayNames[date.getDay()].toUpperCase();
+                    });
+                });
+                
+                document.querySelectorAll('select.auto-size-select').forEach(select => {
+                    select.addEventListener('change', () => {
+                        autoSizeSelect(select);
+                    });
+                });
             }
 
             // --- EVENT LISTENERS DE IMPRESSÃO ---
             printBtn.addEventListener('click', () => {
-                console.log("Botão imprimir clicado");
-                const originalContent = prepareForPrint();
-                
-                // Pequeno delay para garantir que o DOM foi atualizado
-                setTimeout(() => {
-                    window.print();
-                    restoreAfterPrint(originalContent);
-                }, 500);
+                console.log("🖨️ Botão imprimir clicado");
+                handlePrint();
             });
 
             reportBtn.addEventListener('click', () => {
-                console.log("Botão relatório clicado");
+                console.log("📊 Botão relatório clicado");
+                handlePrint();
+            });
+
+            function handlePrint() {
                 const originalContent = prepareForPrint();
                 
                 // Pequeno delay para garantir que o DOM foi atualizado
                 setTimeout(() => {
+                    console.log("🚀 Iniciando impressão...");
                     window.print();
                     restoreAfterPrint(originalContent);
-                }, 500);
-            });
+                }, 300);
+            }
 
             // --- LÓGICA DE AUTENTICAÇÃO E BOTÕES ---
             const checkAuth = () => {
@@ -867,11 +956,11 @@
                     : [service.portaria.trim(), 'A DEFINIR'];
                 
                 row.innerHTML = `
-                    <td class="px-2 py-1">
+                    <td class="px-2 py-1 border border-gray-300">
                         <input type="date" class="p-1 border-0 rounded w-full date-input" value="${service.date}" data-row-id="${rowId}" ${disabledState}>
                     </td>
-                    <td id="day-cell-${rowId}" class="px-2 py-1">${service.day}</td>
-                    <td class="px-2 py-1 font-semibold text-blue-700 relative group">
+                    <td id="day-cell-${rowId}" class="px-2 py-1 border border-gray-300">${service.day}</td>
+                    <td class="px-2 py-1 font-semibold text-blue-700 relative group border border-gray-300">
                         <div data-type>${service.type}</div>
                         <div data-info-display class="text-xs text-gray-500 italic">${service.info || ''}</div>
                         <button class="edit-info-btn absolute top-1 right-1 p-0.5 bg-blue-100 rounded-full text-blue-600 opacity-0 group-hover:opacity-100 ${disabledState === 'disabled' ? 'hidden' : ''}" title="Adicionar/Editar Informação">
@@ -880,12 +969,12 @@
                             </svg>
                         </button>
                     </td>
-                    <td class="px-1 py-1 flex flex-col gap-1 items-center justify-center">
+                    <td class="px-1 py-1 flex flex-col gap-1 items-center justify-center border border-gray-300">
                         ${createSelectForRole(staffNames, portariaParts[0], '', 'portaria')}
                         ${createSelectForRole(staffNames, portariaParts[1], '', 'portaria')}
                     </td>
-                    <td class="px-1 py-1">${createSelectForRole(staffNames, service.direcao, '', 'direcao')}</td>
-                    <td class="px-1 py-1">${createSelectForRole(staffNames, service.preleitor, 'font-semibold', 'preleitor')}</td>`;
+                    <td class="px-1 py-1 border border-gray-300">${createSelectForRole(staffNames, service.direcao, '', 'direcao')}</td>
+                    <td class="px-1 py-1 border border-gray-300">${createSelectForRole(staffNames, service.preleitor, 'font-semibold', 'preleitor')}</td>`;
                 
                 return row;
             }
@@ -898,7 +987,7 @@
                     const row = document.createElement('tr');
                     row.dataset.weekNum = weekIndex;
                     row.innerHTML = `
-                        <td colspan="6" class="bg-blue-200 text-blue-800 font-bold p-2 text-center relative">
+                        <td colspan="6" class="bg-blue-200 text-blue-800 font-bold p-2 text-center relative border border-gray-300">
                             ${weekNameText}
                             <div class="print-hidden-controls absolute right-4 top-1/2 -translate-y-1/2 flex gap-2">
                                 <button class="remove-week-culto-btn bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-700" data-week-num="${weekIndex}" ${disabledState}>-</button>
