@@ -23,7 +23,7 @@
             background-image: none;
         }
 
-      @media print {
+     @media print {
     body {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
@@ -36,7 +36,7 @@
     #header-buttons, #auth-container, .border-b, footer, 
     .remove-week-culto-btn, .add-culto-btn, #add-culto-modal, 
     #remove-culto-modal, #tab-saved, #password-confirm-modal,
-    #logo-container, #month-year-controls, .print-hidden-controls { /* Adicionado #month-year-controls e .print-hidden-controls */
+    #logo-container, #month-year-controls, .print-hidden-controls {
         display: none !important;
     }
 
@@ -58,6 +58,13 @@
         border: none !important;
     }
     
+    /* CORREÇÃO PRINCIPAL: Garante que o texto seja visível */
+    body, td, th, select, input, div, span {
+        color: black !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
     /* Melhora a aparência dos cabeçalhos */
     .bg-blue-500 {
         background-color: #d1d5db !important;
@@ -81,9 +88,7 @@
         border-bottom: 1px solid #9ca3af !important;
     }
 
-    /* --- NOVA TENTATIVA DE IMPRESSÃO --- */
-    /* Em vez de esconder selects/inputs, vamos estilizá-los como texto */
-    
+    /* --- ESTILOS PARA INPUTS E SELECTS --- */
     input, select {
         -webkit-appearance: none !important;
         -moz-appearance: none !important;
@@ -93,45 +98,27 @@
         box-shadow: none !important;
         padding: 0 !important;
         margin: 0 !important;
-        color: black !important; /* Garante que o texto seja preto */
+        color: black !important;
         font-size: 9pt !important;
-        font-family: inherit !important; /* Garante a mesma fonte */
+        font-family: inherit !important;
+        width: 100% !important;
+        text-align: center !important;
     }
 
-    /* Garante que as opções não sejam impressas */
-    select option {
-        display: none !important;
-    }
-    
-    /* Remove as setas (deve ser coberto pelo appearance:none, mas por via das dúvidas) */
+    /* Remove setas e ícones */
     select::-ms-expand { display: none !important; }
     select::-webkit-scrollbar { display: none !important; }
-
-    /* Ajusta inputs de data */
-    input[type="date"] {
-        display: inline-block !important;
-        width: auto !important;
-        font-size: 9pt !important;
-    }
     
-    /* Remove ícone de calendário do input[type=date] */
     input[type="date"]::-webkit-inner-spin-button,
     input[type="date"]::-webkit-calendar-picker-indicator {
         display: none !important;
         -webkit-appearance: none !important;
     }
 
-    /* Ajusta selects (auto-size não funciona no print) */
-    select.auto-size-select {
-        width: 100% !important;
-        text-align: center !important;
+    /* Remove opções dos selects */
+    select option {
+        display: none !important;
     }
-
-    /* Remove os pseudo-elementos da tentativa anterior */
-    td:has(select)::after { content: none !important; }
-    td.flex-col::before { content: none !important; }
-    td.flex-col::after { content: none !important; }
-
 
     /* Remove grupos e botões de edição */
     .group, .edit-info-btn {
@@ -141,7 +128,7 @@
     /* Ajusta informações adicionais */
     [data-info-display] {
         font-size: 8pt !important;
-        color: #6b7280 !important;
+        color: #4b5563 !important; /* Cor mais escura para melhor legibilidade */
         margin-top: 1px !important;
     }
 
@@ -211,6 +198,12 @@
     /* Remove qualquer opacidade */
     .opacity-0, .group-hover\:opacity-100 {
         opacity: 1 !important;
+    }
+
+    /* CORREÇÃO ADICIONAL: Garante que todo texto seja legível */
+    td, th {
+        color: black !important;
+        background-color: transparent !important;
     }
 }
     </style>
