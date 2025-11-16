@@ -165,6 +165,14 @@
             #print-table tr:nth-child(odd) {
                 background: #ffffff !important;
             }
+            
+            /* Logo na impressão */
+            .print-logo {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                height: 40px;
+            }
         }
     </style>
 </head>
@@ -288,6 +296,8 @@
 
     <!-- View de Impressão (oculta normalmente) -->
     <div id="print-view" class="hidden">
+        <!-- Logo na impressão -->
+        <img src="https://i.postimg.cc/NF8psJ8b/adca.png" alt="Logo" class="print-logo">
         <div class="print-title">ESCALA DE CULTOS ADCA - CAPOEIRA GRANDE</div>
         <div id="month-year-reference" class="month-year-reference"></div>
         <table id="print-table" class="w-full">
@@ -512,6 +522,13 @@
                         const dateInput = cells[0].querySelector('input[type="date"]');
                         const dateValue = dateInput ? dateInput.value : '';
                         
+                        // Formatar data no formato "dia/mês/ano"
+                        let formattedDate = '';
+                        if (dateValue) {
+                            const [year, month, day] = dateValue.split('-');
+                            formattedDate = `${day}/${month}/${year}`;
+                        }
+                        
                         const dayValue = cells[1].textContent;
                         const cultoType = cells[2].querySelector('[data-type]').textContent;
                         const infoValue = cells[2].querySelector('[data-info-display]').textContent;
@@ -530,7 +547,7 @@
                         const preleitorValue = preleitorSelect ? preleitorSelect.options[preleitorSelect.selectedIndex].text : 'A DEFINIR';
                         
                         weekData.services.push({
-                            date: dateValue,
+                            date: formattedDate, // Usar data formatada
                             day: dayValue,
                             type: cultoType,
                             info: infoValue,
