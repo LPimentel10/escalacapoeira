@@ -515,58 +515,6 @@ reportBtn.addEventListener('click', () => {
                 }
             };
             
-            authBtn.addEventListener('click', (e) => {
-                if(isLoggedIn) {
-                    sessionStorage.removeItem('escala_loggedin');
-                    checkAuth();
-                    renderSchedule(parseInt(yearInput.value), parseInt(monthSelect.value));
-                } else {
-                    authContainer.classList.remove('hidden');
-                    authContainer.classList.add('flex');
-                }
-            });
-
-            cancelLoginBtn.addEventListener('click', () => { authContainer.classList.add('hidden'); authContainer.classList.remove('flex'); });
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                loginError.classList.add('hidden');
-                if (document.getElementById('username').value === 'cgcapoeira' && document.getElementById('password').value === '3458') {
-                    sessionStorage.setItem('escala_loggedin', 'true');
-                    authContainer.classList.add('hidden');
-                    authContainer.classList.remove('flex');
-                    checkAuth();
-                    renderSchedule(parseInt(yearInput.value), parseInt(monthSelect.value));
-                } else {
-                    loginError.classList.remove('hidden');
-                }
-            });
-
-            // --- LÓGICA DAS ABAS ---
-            tabEditor.addEventListener('click', () => {
-                editorView.classList.remove('hidden');
-                savedSchedulesView.classList.add('hidden');
-                tabEditor.classList.add('tab-active');
-                tabSaved.classList.remove('tab-active');
-            });
-
-            tabSaved.addEventListener('click', () => {
-                savedSchedulesView.classList.remove('hidden');
-                editorView.classList.add('hidden');
-                tabSaved.classList.add('tab-active');
-                tabEditor.classList.remove('tab-active');
-                loadSavedSchedules();
-            });
-
-            // --- LÓGICA FIREBASE (SALVAR/CARREGAR/DELETAR) ---
-            saveScheduleBtn.addEventListener('click', saveScheduleToFirebase);
-
-            async function saveScheduleToFirebase() {
-                if (!schedulesCollection) { alert("Erro de conexão com o Firebase."); return; }
-                
-                try {
-                    const month = parseInt(monthSelect.value);
-                    const year = parseInt(yearInput.value);
-                    const scheduleId = `${year}-${String(month + 1).padStart(2, '0')}`;
                     
                     const scheduleData = { month, year, scheduleName: `${months[month]} de ${year}`, weeks: [] };
 
