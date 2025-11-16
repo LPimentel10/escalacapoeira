@@ -62,6 +62,51 @@
             .edit-info-btn {
                 display: none !important;
             }
+            
+            /* Garante que a tabela seja visível */
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+            
+            /* Estilo para os valores de texto na impressão */
+            .print-text-value {
+                display: inline-block !important;
+                min-width: 80px;
+                font-weight: 500;
+            }
+            
+            /* Garante que todas as células da tabela sejam visíveis */
+            td, th {
+                border: 1px solid #ddd !important;
+                padding: 4px !important;
+                font-size: 10pt !important;
+                background: white !important;
+                color: black !important;
+            }
+            
+            /* Remove qualquer elemento que possa estar sobrepondo */
+            .hidden {
+                display: none !important;
+            }
+            
+            /* Garante que o conteúdo principal ocupe toda a página */
+            #main-content {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+            
+            /* Melhora a legibilidade dos cabeçalhos */
+            .bg-blue-500, .bg-blue-200 {
+                background: #e0e0e0 !important;
+                color: black !important;
+            }
+            
+            /* Garante que spans de texto sejam visíveis */
+            span {
+                display: inline !important;
+            }
         }
     </style>
 </head>
@@ -364,31 +409,37 @@
                     <th class="px-2 py-2">Preleitor</th>
                 </tr>`;
 
-            // --- LÓGICA DE AUTENTICAÇÃO E BOTÕES ---
-            // Função para preparar dados para impressão
+            // --- FUNÇÕES DE IMPRESSÃO CORRIGIDAS ---
             function prepareForPrint() {
                 console.log("Preparando para impressão...");
                 
                 // Salvar o conteúdo original
                 const originalScheduleBody = scheduleBody.innerHTML;
                 
-                // Criar uma cópia da tabela para impressão
+                // Criar uma cópia mais robusta da tabela
                 const printClone = scheduleBody.cloneNode(true);
                 
-                // Substituir todos os selects e inputs por texto
+                // Substituir todos os selects por texto
                 printClone.querySelectorAll('select').forEach(select => {
                     const selectedOption = select.options[select.selectedIndex];
-                    const textNode = document.createTextNode(selectedOption.text);
-                    select.parentNode.replaceChild(textNode, select);
+                    const textSpan = document.createElement('span');
+                    textSpan.className = 'print-text-value';
+                    textSpan.textContent = selectedOption.text;
+                    textSpan.style.display = 'inline-block';
+                    textSpan.style.minWidth = '80px';
+                    select.parentNode.replaceChild(textSpan, select);
                 });
                 
+                // Substituir inputs de data
                 printClone.querySelectorAll('input[type="date"]').forEach(input => {
-                    const textNode = document.createTextNode(input.value);
-                    input.parentNode.replaceChild(textNode, input);
+                    const textSpan = document.createElement('span');
+                    textSpan.className = 'print-text-value';
+                    textSpan.textContent = input.value;
+                    input.parentNode.replaceChild(textSpan, input);
                 });
                 
-                // Remover botões de edição
-                printClone.querySelectorAll('.edit-info-btn, .add-culto-btn, .remove-week-culto-btn').forEach(btn => {
+                // Remover completamente botões de edição
+                printClone.querySelectorAll('.edit-info-btn, .add-culto-btn, .remove-week-culto-btn, .print-hidden-controls').forEach(btn => {
                     btn.remove();
                 });
                 
@@ -398,9 +449,9 @@
                 return originalScheduleBody;
             }
 
-            // Função para restaurar o conteúdo original
             function restoreAfterPrint(originalContent) {
-                setTimeout(() => {
+                // Usar evento afterprint para garantir que a restauração aconteça após a impressão
+                const restoreHandler = () => {
                     scheduleBody.innerHTML = originalContent;
                     console.log("Conteúdo restaurado após impressão");
                     
@@ -410,9 +461,23 @@
                             btn.addEventListener('click', onEditInfoClick);
                         });
                     }
-                }, 1000);
+                    
+                    // Remover o event listener após uso
+                    window.removeEventListener('afterprint', restoreHandler);
+                };
+                
+                window.addEventListener('afterprint', restoreHandler);
+                
+                // Backup: também restaurar após 3 segundos (caso afterprint não funcione)
+                setTimeout(() => {
+                    if (scheduleBody.innerHTML !== originalContent) {
+                        scheduleBody.innerHTML = originalContent;
+                        console.log("Restauração por timeout");
+                    }
+                }, 3000);
             }
 
+            // --- EVENT LISTENERS DE IMPRESSÃO ---
             printBtn.addEventListener('click', () => {
                 console.log("Botão imprimir clicado");
                 const originalContent = prepareForPrint();
@@ -421,7 +486,7 @@
                 setTimeout(() => {
                     window.print();
                     restoreAfterPrint(originalContent);
-                }, 100);
+                }, 500);
             });
 
             reportBtn.addEventListener('click', () => {
@@ -432,9 +497,10 @@
                 setTimeout(() => {
                     window.print();
                     restoreAfterPrint(originalContent);
-                }, 100);
+                }, 500);
             });
 
+            // --- LÓGICA DE AUTENTICAÇÃO E BOTÕES ---
             const checkAuth = () => {
                 isLoggedIn = sessionStorage.getItem('escala_loggedin') === 'true';
                 updateAuthUI();
