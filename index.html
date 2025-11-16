@@ -23,7 +23,7 @@
             background-image: none;
         }
 
-     @media print {
+      @media print {
     body {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
@@ -36,7 +36,7 @@
     #header-buttons, #auth-container, .border-b, footer, 
     .remove-week-culto-btn, .add-culto-btn, #add-culto-modal, 
     #remove-culto-modal, #tab-saved, #password-confirm-modal,
-    #logo-container, #month-year-controls, .print-hidden-controls {
+    #logo-container, #month-year-controls, .print-hidden-controls { /* Adicionado #month-year-controls e .print-hidden-controls */
         display: none !important;
     }
 
@@ -58,51 +58,6 @@
         border: none !important;
     }
     
-    /* CORREÇÃO PRINCIPAL: Esconde selects e mostra apenas o texto selecionado */
-    select {
-        display: none !important;
-    }
-    
-    /* Mostra o texto selecionado dos selects */
-    select.auto-size-select::after {
-        content: attr(data-print-value);
-        display: block !important;
-        color: black !important;
-        font-size: 9pt !important;
-        text-align: center !important;
-    }
-    
-    /* Para células com múltiplos selects (portaria) */
-    td.flex-col::before {
-        content: attr(data-print-value1);
-        display: block !important;
-        color: black !important;
-        font-size: 9pt !important;
-        text-align: center !important;
-    }
-    
-    td.flex-col::after {
-        content: attr(data-print-value2);
-        display: block !important;
-        color: black !important;
-        font-size: 9pt !important;
-        text-align: center !important;
-        margin-top: 2px !important;
-    }
-
-    /* Para inputs de data */
-    input[type="date"] {
-        display: none !important;
-    }
-    
-    input[type="date"]::after {
-        content: attr(data-print-value);
-        display: block !important;
-        color: black !important;
-        font-size: 9pt !important;
-        text-align: center !important;
-    }
-
     /* Melhora a aparência dos cabeçalhos */
     .bg-blue-500 {
         background-color: #d1d5db !important;
@@ -126,6 +81,58 @@
         border-bottom: 1px solid #9ca3af !important;
     }
 
+    /* --- NOVA TENTATIVA DE IMPRESSÃO --- */
+    /* Em vez de esconder selects/inputs, vamos estilizá-los como texto */
+    
+    input, select {
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        color: black !important; /* Garante que o texto seja preto */
+        font-size: 9pt !important;
+        font-family: inherit !important; /* Garante a mesma fonte */
+    }
+
+    /* Garante que as opções não sejam impressas */
+    select option {
+        display: none !important;
+    }
+    
+    /* Remove as setas (deve ser coberto pelo appearance:none, mas por via das dúvidas) */
+    select::-ms-expand { display: none !important; }
+    select::-webkit-scrollbar { display: none !important; }
+
+    /* Ajusta inputs de data */
+    input[type="date"] {
+        display: inline-block !important;
+        width: auto !important;
+        font-size: 9pt !important;
+    }
+    
+    /* Remove ícone de calendário do input[type=date] */
+    input[type="date"]::-webkit-inner-spin-button,
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        display: none !important;
+        -webkit-appearance: none !important;
+    }
+
+    /* Ajusta selects (auto-size não funciona no print) */
+    select.auto-size-select {
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    /* Remove os pseudo-elementos da tentativa anterior */
+    td:has(select)::after { content: none !important; }
+    td.flex-col::before { content: none !important; }
+    td.flex-col::after { content: none !important; }
+
+
     /* Remove grupos e botões de edição */
     .group, .edit-info-btn {
         display: none !important;
@@ -146,11 +153,14 @@
     .gap-1, .gap-2 {
         gap: 0 !important;
     }
+    
+    td.flex-col select:last-child {
+        margin-top: 2px;
+    }
 
     /* Ajusta células de portaria */
     td:has(.flex-col) {
         padding: 1px 2px !important;
-        position: relative !important;
     }
 
     /* Remove espaçamentos excessivos */
@@ -511,69 +521,6 @@
 
 
             // --- LÓGICA DE AUTENTICAÇÃO E BOTÕES ---
-// Função para preparar dados para impressão
-function prepareForPrint() {
-    // Para selects normais
-    document.querySelectorAll('select.auto-size-select').forEach(select => {
-        const selectedOption = select.options[select.selectedIndex];
-        select.setAttribute('data-print-value', selectedOption.text);
-    });
-    
-    // Para células de portaria com dois selects
-    document.querySelectorAll('td.flex-col').forEach(td => {
-        const selects = td.querySelectorAll('select');
-        if (selects.length >= 2) {
-            const value1 = selects[0].options[selects[0].selectedIndex].text;
-            const value2 = selects[1].options[selects[1].selectedIndex].text;
-            td.setAttribute('data-print-value1', value1);
-            td.setAttribute('data-print-value2', value2);
-        }
-    });
-    
-    // Para inputs de data
-    document.querySelectorAll('input[type="date"]').forEach(input => {
-        input.setAttribute('data-print-value', input.value);
-    });
-}
-
-printBtn.addEventListener('click', () => {
-    prepareForPrint();
-    setTimeout(() => {
-        window.print();
-        // Restaurar estado após impressão
-        setTimeout(() => {
-            document.querySelectorAll('[data-print-value]').forEach(el => {
-                el.removeAttribute('data-print-value');
-            });
-            document.querySelectorAll('[data-print-value1], [data-print-value2]').forEach(el => {
-                el.removeAttribute('data-print-value1');
-                el.removeAttribute('data-print-value2');
-            });
-        }, 1000);
-    }, 100);
-});
-
-reportBtn.addEventListener('click', () => {
-    prepareForPrint();
-    setTimeout(() => {
-        window.print();
-        // Restaurar estado após impressão
-        setTimeout(() => {
-            document.querySelectorAll('[data-print-value]').forEach(el => {
-                el.removeAttribute('data-print-value');
-            });
-            document.querySelectorAll('[data-print-value1], [data-print-value2]').forEach(el => {
-                el.removeAttribute('data-print-value1');
-                el.removeAttribute('data-print-value2');
-            });
-        }, 1000);
-    }, 100);
-});
-
-const checkAuth = () => {
-    isLoggedIn = sessionStorage.getItem('escala_loggedin') === 'true';
-    updateAuthUI();
-};
             printBtn.addEventListener('click', () => window.print());
             reportBtn.addEventListener('click', () => window.print()); // NOVO LISTENER
 
