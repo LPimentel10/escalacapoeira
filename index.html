@@ -29,21 +29,24 @@
             .remove-week-culto-btn, .add-culto-btn, #add-culto-modal, 
             #remove-culto-modal, #tab-saved, #password-confirm-modal,
             #logo-container, #month-year-controls, .print-hidden-controls,
-            #editor-view > div:first-child {
+            #editor-view > div:first-child, #main-content > div {
                 display: none !important;
             }
             
-            /* Remove espaçamentos excessivos */
-            body, #main-content, #main-content > div {
-                padding: 0 !important;
-                margin: 0 !important;
+            /* Mostra apenas o conteúdo de impressão */
+            #print-view {
+                display: block !important;
                 width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
             
-            /* Remove sombras e bordas decorativas */
-            .shadow-md, .rounded-t-lg, .rounded-b-lg, .rounded-lg {
-                box-shadow: none !important;
-                border-radius: 0 !important;
+            /* Remove tudo do corpo e mostra apenas a impressão */
+            body, #main-content {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                background: white !important;
             }
             
             /* Configuração da página - A4 LANDSCAPE */
@@ -56,17 +59,12 @@
             body {
                 color: black !important;
                 background: white !important;
-                font-size: 8pt !important;
-                line-height: 1;
+                font-size: 9pt !important;
+                line-height: 1.1;
             }
             
-            /* Remove botões de edição */
-            .edit-info-btn {
-                display: none !important;
-            }
-            
-            /* ESTILOS DA TABELA PARA IMPRESSÃO COMPACTA */
-            table {
+            /* Estilos da tabela de impressão */
+            #print-table {
                 width: 100% !important;
                 border-collapse: collapse !important;
                 border: 1px solid #000 !important;
@@ -74,152 +72,35 @@
                 font-size: 8pt !important;
             }
             
-            /* Larguras específicas para cada coluna - MAIS COMPACTAS */
-            td:nth-child(1), th:nth-child(1) { width: 10% !important; } /* Data */
-            td:nth-child(2), th:nth-child(2) { width: 12% !important; } /* Dia */
-            td:nth-child(3), th:nth-child(3) { width: 15% !important; } /* Culto */
-            td:nth-child(4), th:nth-child(4) { width: 18% !important; } /* Portaria */
-            td:nth-child(5), th:nth-child(5) { width: 15% !important; } /* Direção */
-            td:nth-child(6), th:nth-child(6) { width: 15% !important; } /* Preleitor */
-            
-            /* Garante que todas as células da tabela sejam visíveis */
-            td, th {
+            #print-table td, #print-table th {
                 border: 1px solid #000 !important;
-                padding: 2px 1px !important;
-                font-size: 8pt !important;
-                background: white !important;
-                color: black !important;
+                padding: 3px 2px !important;
                 text-align: center !important;
                 vertical-align: middle !important;
-                word-wrap: break-word;
-                overflow: hidden;
+                background: white !important;
+                color: black !important;
                 line-height: 1.1 !important;
             }
             
-            /* Estilo para os valores de texto na impressão */
-            .print-text-value {
-                display: block !important;
-                padding: 1px 0 !important;
-                font-weight: normal;
-                font-size: 8pt !important;
-                text-align: center;
-                line-height: 1.1;
-            }
-            
-            /* Remove qualquer elemento que possa estar sobrepondo */
-            .hidden {
-                display: none !important;
-            }
-            
-            /* Garante que o conteúdo principal ocupe toda a página */
-            #main-content, #editor-view, .overflow-x-auto {
-                margin: 0 !important;
-                padding: 0 !important;
-                width: 100% !important;
-                display: block !important;
-            }
-            
-            /* Melhora a legibilidade dos cabeçalhos */
-            .bg-blue-500, .table-header-week {
+            #print-table th {
                 background: #f0f0f0 !important;
-                color: black !important;
                 font-weight: bold !important;
-                border: 1px solid #000 !important;
-                font-size: 9pt !important;
-                padding: 3px 1px !important;
             }
             
-            /* Estilo para cabeçalhos de semana */
-            [data-week-num] {
+            .week-header {
                 background: #e0e0e0 !important;
-                color: black !important;
                 font-weight: bold !important;
                 font-size: 9pt !important;
-                text-align: center !important;
-                padding: 3px 1px !important;
             }
             
-            /* Remove hover effects */
-            .hover\:bg-gray-50:hover {
-                background: white !important;
-            }
-            
-            /* Remove flex containers que podem quebrar o layout */
-            .flex {
-                display: block !important;
-            }
-            
-            /* Garante que inputs e selects sejam convertidos corretamente */
-            input, select {
-                display: none !important;
-            }
-            
-            /* Mostra os spans de substituição */
-            .print-text-value {
-                display: block !important;
-            }
-            
-            /* Estilo para informações adicionais */
-            [data-info-display] {
-                font-size: 7pt !important;
-                font-style: italic;
-                color: #666 !important;
-                margin-top: 0 !important;
-                line-height: 1;
-                padding: 0 !important;
-            }
-            
-            /* Remove gaps em células com múltiplos elementos */
-            .flex-col.gap-1 {
-                gap: 0 !important;
-            }
-            
-            /* Garante alinhamento vertical em células complexas */
-            .items-center.justify-center {
-                display: block !important;
-                text-align: center;
-            }
-            
-            /* Título principal da escala */
-            .bg-blue-600 {
+            .print-title {
                 background: #d0d0d0 !important;
-                color: black !important;
                 font-weight: bold !important;
                 font-size: 12pt !important;
                 text-align: center !important;
                 padding: 8px !important;
                 border: 1px solid #000 !important;
-                margin-bottom: 3px !important;
-            }
-            
-            /* Remove bordas extras */
-            .border-gray-300 {
-                border: 1px solid #000 !important;
-            }
-            
-            /* Garante que células de portaria fiquem em uma linha só */
-            .portaria-combined {
-                display: block !important;
-                text-align: center;
-                font-size: 8pt !important;
-                padding: 1px !important;
-                line-height: 1.1;
-            }
-            
-            /* Remove qualquer padding extra */
-            .px-2, .py-1, .p-2, .p-1 {
-                padding: 1px !important;
-            }
-            
-            /* Compacta ainda mais as linhas */
-            tr {
-                line-height: 1 !important;
-            }
-            
-            /* Remove margens entre semanas */
-            .space-y-3, .space-y-2 {
-                margin: 0 !important;
-                padding: 0 !important;
+                margin-bottom: 5px !important;
             }
         }
     </style>
@@ -340,6 +221,14 @@
                 <p>&copy; Copyright. Todos os direitos reservados.</p>
             </footer>
         </div>
+    </div>
+
+    <!-- View de Impressão (oculta normalmente) -->
+    <div id="print-view" class="hidden">
+        <div class="print-title">ESCALA DE CULTOS ADCA - CAPOEIRA GRANDE</div>
+        <table id="print-table" class="w-full">
+            <tbody id="print-body"></tbody>
+        </table>
     </div>
     
     <!-- Modal para Adicionar Culto -->
@@ -462,11 +351,12 @@
             const confirmPasswordActionBtn = document.getElementById('confirm-password-action');
             const confirmPasswordInput = document.getElementById('confirm-password-input');
             const passwordConfirmError = document.getElementById('password-confirm-error');
+            const printView = document.getElementById('print-view');
+            const printBody = document.getElementById('print-body');
 
             // --- ESTADO DA APLICAÇÃO ---
             let isLoggedIn = false;
             let onPasswordConfirm = null;
-            let originalScheduleContent = null;
 
             // --- CONSTANTES ---
             const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
@@ -524,174 +414,130 @@
                     <th class="px-2 py-2 border border-gray-300">Preleitor</th>
                 </tr>`;
 
-            // --- FUNÇÕES DE IMPRESSÃO CORRIGIDAS ---
+            // --- FUNÇÃO DE IMPRESSÃO COMPLETAMENTE NOVA ---
             function prepareForPrint() {
                 console.log("🖨️ Preparando para impressão...");
                 
-                // Salvar o conteúdo original
-                originalScheduleContent = scheduleBody.innerHTML;
+                // Limpar conteúdo anterior
+                printBody.innerHTML = '';
                 
-                // Criar uma cópia profunda do elemento
-                const printContainer = document.createElement('div');
-                printContainer.innerHTML = scheduleBody.innerHTML;
+                // Coletar dados da tabela principal
+                const weeksData = [];
                 
-                // Processar todos os selects
-                printContainer.querySelectorAll('select').forEach(select => {
-                    const selectedOption = select.options[select.selectedIndex];
-                    const displayValue = selectedOption ? selectedOption.text : 'A DEFINIR';
+                // Processar cada semana
+                scheduleBody.querySelectorAll('tr[data-week-num]').forEach(weekHeader => {
+                    const weekNum = parseInt(weekHeader.dataset.weekNum);
+                    const weekName = weekHeader.querySelector('td').childNodes[0].textContent.trim();
                     
-                    const textSpan = document.createElement('span');
-                    textSpan.className = 'print-text-value';
-                    textSpan.textContent = displayValue;
-                    textSpan.style.cssText = 'display: block; padding: 1px 0; font-weight: normal; font-size: 8pt; text-align: center; line-height: 1.1;';
+                    const weekData = {
+                        name: weekName,
+                        services: []
+                    };
                     
-                    select.parentNode.replaceChild(textSpan, select);
-                });
-                
-                // Processar todos os inputs de data
-                printContainer.querySelectorAll('input[type="date"]').forEach(input => {
-                    const textSpan = document.createElement('span');
-                    textSpan.className = 'print-text-value';
-                    textSpan.textContent = input.value || 'N/A';
-                    textSpan.style.cssText = 'display: block; padding: 1px 0; font-weight: normal; font-size: 8pt; text-align: center; line-height: 1.1;';
-                    
-                    input.parentNode.replaceChild(textSpan, input);
-                });
-                
-                // Processar células de portaria (que têm dois selects) - COMBINAR EM UMA LINHA
-                printContainer.querySelectorAll('td.flex-col').forEach(td => {
-                    const spans = td.querySelectorAll('.print-text-value');
-                    if (spans.length === 2) {
-                        const portariaText = `${spans[0].textContent} / ${spans[1].textContent}`;
-                        const combinedSpan = document.createElement('span');
-                        combinedSpan.className = 'print-text-value portaria-combined';
-                        combinedSpan.textContent = portariaText;
-                        combinedSpan.style.cssText = 'display: block; padding: 1px 0; font-weight: normal; font-size: 8pt; text-align: center; line-height: 1.1;';
+                    // Encontrar todos os serviços desta semana
+                    scheduleBody.querySelectorAll(`tr[data-week-index="${weekNum}"]`).forEach(serviceRow => {
+                        const cells = serviceRow.querySelectorAll('td');
                         
-                        td.innerHTML = '';
-                        td.appendChild(combinedSpan);
-                        td.style.cssText = 'border: 1px solid #000 !important; padding: 2px 1px !important; text-align: center !important; vertical-align: middle !important;';
-                    }
+                        // Extrair dados dos inputs e selects
+                        const dateInput = cells[0].querySelector('input[type="date"]');
+                        const dateValue = dateInput ? dateInput.value : '';
+                        
+                        const dayValue = cells[1].textContent;
+                        const cultoType = cells[2].querySelector('[data-type]').textContent;
+                        const infoValue = cells[2].querySelector('[data-info-display]').textContent;
+                        
+                        // Extrair valores dos selects de portaria
+                        const portariaSelects = cells[3].querySelectorAll('select');
+                        const portaria1 = portariaSelects[0] ? portariaSelects[0].options[portariaSelects[0].selectedIndex].text : 'A DEFINIR';
+                        const portaria2 = portariaSelects[1] ? portariaSelects[1].options[portariaSelects[1].selectedIndex].text : 'A DEFINIR';
+                        const portariaValue = `${portaria1} / ${portaria2}`;
+                        
+                        // Extrair valores dos outros selects
+                        const direcaoSelect = cells[4].querySelector('select');
+                        const direcaoValue = direcaoSelect ? direcaoSelect.options[direcaoSelect.selectedIndex].text : 'A DEFINIR';
+                        
+                        const preleitorSelect = cells[5].querySelector('select');
+                        const preleitorValue = preleitorSelect ? preleitorSelect.options[preleitorSelect.selectedIndex].text : 'A DEFINIR';
+                        
+                        weekData.services.push({
+                            date: dateValue,
+                            day: dayValue,
+                            type: cultoType,
+                            info: infoValue,
+                            portaria: portariaValue,
+                            direcao: direcaoValue,
+                            preleitor: preleitorValue
+                        });
+                    });
+                    
+                    weeksData.push(weekData);
                 });
                 
-                // Remover completamente todos os botões e controles
-                printContainer.querySelectorAll('.edit-info-btn, .add-culto-btn, .remove-week-culto-btn, .print-hidden-controls, button').forEach(element => {
-                    element.remove();
+                // Renderizar na view de impressão
+                weeksData.forEach(week => {
+                    // Cabeçalho da semana
+                    const weekHeaderRow = document.createElement('tr');
+                    weekHeaderRow.className = 'week-header';
+                    weekHeaderRow.innerHTML = `<td colspan="6">${week.name}</td>`;
+                    printBody.appendChild(weekHeaderRow);
+                    
+                    // Cabeçalho das colunas
+                    const columnsHeader = document.createElement('tr');
+                    columnsHeader.innerHTML = `
+                        <th>Data</th>
+                        <th>Dia</th>
+                        <th>Culto</th>
+                        <th>Portaria</th>
+                        <th>Direção</th>
+                        <th>Preleitor</th>
+                    `;
+                    printBody.appendChild(columnsHeader);
+                    
+                    // Serviços da semana
+                    week.services.forEach(service => {
+                        const serviceRow = document.createElement('tr');
+                        serviceRow.innerHTML = `
+                            <td>${service.date}</td>
+                            <td>${service.day}</td>
+                            <td>${service.type}${service.info ? '<br><small>' + service.info + '</small>' : ''}</td>
+                            <td>${service.portaria}</td>
+                            <td>${service.direcao}</td>
+                            <td>${service.preleitor}</td>
+                        `;
+                        printBody.appendChild(serviceRow);
+                    });
+                    
+                    // Linha em branco entre semanas
+                    const spacerRow = document.createElement('tr');
+                    spacerRow.innerHTML = '<td colspan="6" style="height: 5px;"></td>';
+                    printBody.appendChild(spacerRow);
                 });
-                
-                // Aplicar estilos de impressão diretamente
-                printContainer.querySelectorAll('td, th').forEach(cell => {
-                    cell.style.border = '1px solid #000 !important';
-                    cell.style.padding = '2px 1px !important';
-                    cell.style.fontSize = '8pt !important';
-                    cell.style.background = 'white !important';
-                    cell.style.color = 'black !important';
-                    cell.style.textAlign = 'center !important';
-                    cell.style.verticalAlign = 'middle !important';
-                    cell.style.lineHeight = '1.1 !important';
-                });
-                
-                printContainer.querySelectorAll('.bg-blue-200, [data-week-num]').forEach(header => {
-                    header.style.background = '#e0e0e0 !important';
-                    header.style.color = 'black !important';
-                    header.style.fontWeight = 'bold !important';
-                    header.style.fontSize = '9pt !important';
-                    header.style.textAlign = 'center !important';
-                    header.style.padding = '3px 1px !important';
-                });
-                
-                printContainer.querySelectorAll('.table-header-week, .bg-blue-500').forEach(header => {
-                    header.style.background = '#f0f0f0 !important';
-                    header.style.color = 'black !important';
-                    header.style.fontWeight = 'bold !important';
-                    header.style.fontSize = '9pt !important';
-                    header.style.textAlign = 'center !important';
-                    header.style.padding = '3px 1px !important';
-                });
-                
-                // Remover gaps em células flex
-                printContainer.querySelectorAll('.flex-col').forEach(el => {
-                    el.style.gap = '0 !important';
-                    el.style.display = 'block !important';
-                });
-                
-                // Substituir o conteúdo original
-                scheduleBody.innerHTML = printContainer.innerHTML;
                 
                 console.log("✅ Preparação para impressão concluída");
-                return originalScheduleContent;
             }
-
-            function restoreAfterPrint(originalContent) {
-                console.log("🔄 Restaurando conteúdo original...");
-                
-                const restoreContent = () => {
-                    if (scheduleBody.innerHTML !== originalContent) {
-                        scheduleBody.innerHTML = originalContent;
-                        console.log("✅ Conteúdo restaurado com sucesso");
-                        
-                        // Re-aplicar event listeners se necessário
-                        if (isLoggedIn) {
-                            reattachEventListeners();
-                        }
-                    }
-                };
-                
-                // Usar afterprint se disponível
-                if ('onafterprint' in window) {
-                    const handler = () => {
-                        restoreContent();
-                        window.removeEventListener('afterprint', handler);
-                    };
-                    window.addEventListener('afterprint', handler);
-                }
-                
-                // Backup: restaurar após um tempo
-                setTimeout(restoreContent, 1000);
-            }
-
-            function reattachEventListeners() {
-                // Re-aplicar listeners para elementos editáveis
-                document.querySelectorAll('.edit-info-btn').forEach(btn => {
-                    btn.addEventListener('click', onEditInfoClick);
-                });
-                
-                document.querySelectorAll('.date-input').forEach(input => {
-                    input.addEventListener('change', (e) => {
-                        const cell = document.getElementById(`day-cell-${e.target.dataset.rowId}`);
-                        const date = new Date(e.target.value + 'T00:00:00');
-                        cell.textContent = dayNames[date.getDay()].toUpperCase();
-                    });
-                });
-                
-                document.querySelectorAll('select.auto-size-select').forEach(select => {
-                    select.addEventListener('change', () => {
-                        autoSizeSelect(select);
-                    });
-                });
-            }
-
-            // --- EVENT LISTENERS DE IMPRESSÃO ---
-            printBtn.addEventListener('click', () => {
-                console.log("🖨️ Botão imprimir clicado");
-                handlePrint();
-            });
-
-            reportBtn.addEventListener('click', () => {
-                console.log("📊 Botão relatório clicado");
-                handlePrint();
-            });
 
             function handlePrint() {
-                const originalContent = prepareForPrint();
+                console.log("🚀 Iniciando impressão...");
+                
+                prepareForPrint();
+                
+                // Mostrar a view de impressão
+                printView.classList.remove('hidden');
                 
                 // Pequeno delay para garantir que o DOM foi atualizado
                 setTimeout(() => {
-                    console.log("🚀 Iniciando impressão...");
                     window.print();
-                    restoreAfterPrint(originalContent);
+                    
+                    // Restaurar após impressão
+                    setTimeout(() => {
+                        printView.classList.add('hidden');
+                    }, 100);
                 }, 300);
             }
+
+            // --- EVENT LISTENERS DE IMPRESSÃO ---
+            printBtn.addEventListener('click', handlePrint);
+            reportBtn.addEventListener('click', handlePrint);
 
             // --- LÓGICA DE AUTENTICAÇÃO E BOTÕES ---
             const checkAuth = () => {
