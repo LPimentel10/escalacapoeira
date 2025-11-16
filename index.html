@@ -67,40 +67,103 @@
             #print-table {
                 width: 100% !important;
                 border-collapse: collapse !important;
-                border: 1px solid #000 !important;
+                border: 2px solid #1e40af !important;
                 table-layout: fixed;
                 font-size: 8pt !important;
             }
             
             #print-table td, #print-table th {
-                border: 1px solid #000 !important;
-                padding: 3px 2px !important;
+                border: 1px solid #94a3b8 !important;
+                padding: 4px 3px !important;
                 text-align: center !important;
                 vertical-align: middle !important;
-                background: white !important;
-                color: black !important;
                 line-height: 1.1 !important;
             }
             
             #print-table th {
-                background: #f0f0f0 !important;
-                font-weight: bold !important;
-            }
-            
-            .week-header {
-                background: #e0e0e0 !important;
+                background: #3b82f6 !important;
+                color: white !important;
                 font-weight: bold !important;
                 font-size: 9pt !important;
             }
             
-            .print-title {
-                background: #d0d0d0 !important;
+            .week-header {
+                background: #1e40af !important;
+                color: white !important;
                 font-weight: bold !important;
-                font-size: 12pt !important;
+                font-size: 10pt !important;
+            }
+            
+            .print-title {
+                background: linear-gradient(135deg, #1e40af, #3b82f6) !important;
+                color: white !important;
+                font-weight: bold !important;
+                font-size: 14pt !important;
                 text-align: center !important;
-                padding: 8px !important;
-                border: 1px solid #000 !important;
+                padding: 10px !important;
+                border: 2px solid #1e3a8a !important;
+                margin-bottom: 8px !important;
+                border-radius: 4px !important;
+            }
+            
+            .month-year-reference {
+                background: #f8fafc !important;
+                color: #1e40af !important;
+                font-weight: bold !important;
+                font-size: 11pt !important;
+                text-align: center !important;
+                padding: 6px !important;
+                border: 1px solid #cbd5e1 !important;
                 margin-bottom: 5px !important;
+                border-radius: 3px !important;
+            }
+            
+            /* Cores para tipos de culto */
+            .culto-louvor {
+                background: #fef3c7 !important;
+                color: #92400e !important;
+                font-weight: 600 !important;
+            }
+            
+            .culto-doutrina {
+                background: #dbeafe !important;
+                color: #1e40af !important;
+                font-weight: 600 !important;
+            }
+            
+            .culto-libertacao {
+                background: #fce7f3 !important;
+                color: #be185d !important;
+                font-weight: 600 !important;
+            }
+            
+            .culto-santa-ceia {
+                background: #dcfce7 !important;
+                color: #166534 !important;
+                font-weight: 600 !important;
+            }
+            
+            .culto-missoes {
+                background: #fef7cd !important;
+                color: #854d0e !important;
+                font-weight: 600 !important;
+            }
+            
+            /* Estilo para informações adicionais */
+            .info-text {
+                font-size: 7pt !important;
+                font-style: italic;
+                color: #64748b !important;
+                margin-top: 2px !important;
+            }
+            
+            /* Zebrado nas linhas */
+            #print-table tr:nth-child(even) {
+                background: #f8fafc !important;
+            }
+            
+            #print-table tr:nth-child(odd) {
+                background: #ffffff !important;
             }
         }
     </style>
@@ -226,6 +289,7 @@
     <!-- View de Impressão (oculta normalmente) -->
     <div id="print-view" class="hidden">
         <div class="print-title">ESCALA DE CULTOS ADCA - CAPOEIRA GRANDE</div>
+        <div id="month-year-reference" class="month-year-reference"></div>
         <table id="print-table" class="w-full">
             <tbody id="print-body"></tbody>
         </table>
@@ -353,6 +417,7 @@
             const passwordConfirmError = document.getElementById('password-confirm-error');
             const printView = document.getElementById('print-view');
             const printBody = document.getElementById('print-body');
+            const monthYearReference = document.getElementById('month-year-reference');
 
             // --- ESTADO DA APLICAÇÃO ---
             let isLoggedIn = false;
@@ -414,9 +479,14 @@
                     <th class="px-2 py-2 border border-gray-300">Preleitor</th>
                 </tr>`;
 
-            // --- FUNÇÃO DE IMPRESSÃO COMPLETAMENTE NOVA ---
+            // --- FUNÇÃO DE IMPRESSÃO ---
             function prepareForPrint() {
                 console.log("🖨️ Preparando para impressão...");
+                
+                // Atualizar referência do mês e ano
+                const month = parseInt(monthSelect.value);
+                const year = parseInt(yearInput.value);
+                monthYearReference.textContent = `${months[month].toUpperCase()} DE ${year}`;
                 
                 // Limpar conteúdo anterior
                 printBody.innerHTML = '';
@@ -496,10 +566,22 @@
                     // Serviços da semana
                     week.services.forEach(service => {
                         const serviceRow = document.createElement('tr');
+                        
+                        // Determinar classe de cor baseada no tipo de culto
+                        let cultoClass = '';
+                        if (service.type.includes('LOUVOR')) cultoClass = 'culto-louvor';
+                        else if (service.type.includes('DOUTRINA')) cultoClass = 'culto-doutrina';
+                        else if (service.type.includes('LIBERTAÇÃO')) cultoClass = 'culto-libertacao';
+                        else if (service.type.includes('SANTA CEIA')) cultoClass = 'culto-santa-ceia';
+                        else if (service.type.includes('MISSÕES')) cultoClass = 'culto-missoes';
+                        
                         serviceRow.innerHTML = `
                             <td>${service.date}</td>
                             <td>${service.day}</td>
-                            <td>${service.type}${service.info ? '<br><small>' + service.info + '</small>' : ''}</td>
+                            <td class="${cultoClass}">
+                                ${service.type}
+                                ${service.info ? '<div class="info-text">' + service.info + '</div>' : ''}
+                            </td>
                             <td>${service.portaria}</td>
                             <td>${service.direcao}</td>
                             <td>${service.preleitor}</td>
@@ -509,7 +591,7 @@
                     
                     // Linha em branco entre semanas
                     const spacerRow = document.createElement('tr');
-                    spacerRow.innerHTML = '<td colspan="6" style="height: 5px;"></td>';
+                    spacerRow.innerHTML = '<td colspan="6" style="height: 8px; background: transparent !important;"></td>';
                     printBody.appendChild(spacerRow);
                 });
                 
