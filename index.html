@@ -23,44 +23,194 @@
             background-image: none;
         }
 
-        @media print {
-    /* ESCONDE COMPLETAMENTE elementos da UI */
+      @media print {
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background-color: white;
+        font-size: 10pt;
+        line-height: 1.2;
+    }
+
+    /* ESCONDE ELEMENTOS DA UI */
     #header-buttons, #auth-container, .border-b, footer, 
     .remove-week-culto-btn, .add-culto-btn, #add-culto-modal, 
     #remove-culto-modal, #tab-saved, #password-confirm-modal,
-    #logo-container, #month-year-controls, .print-hidden-controls {
+    #logo-container, #month-year-controls, .print-hidden-controls { /* Adicionado #month-year-controls e .print-hidden-controls */
         display: none !important;
     }
-    
-    /* Remove espaçamentos excessivos */
+
     body, #main-content, #main-content > div {
         padding: 0 !important;
         margin: 0 !important;
         width: 100% !important;
     }
     
-    /* Remove sombras e bordas */
+    #main-content > div {
+        max-width: 100% !important;
+        box-shadow: none !important;
+    }
+
+    /* Remove sombras e bordas arredondadas */
     .shadow-md, .rounded-t-lg, .rounded-b-lg, .rounded-lg {
         box-shadow: none !important;
         border-radius: 0 !important;
+        border: none !important;
     }
     
+    /* Melhora a aparência dos cabeçalhos */
+    .bg-blue-500 {
+        background-color: #d1d5db !important;
+        color: black !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .bg-blue-200 {
+        background-color: #e5e7eb !important;
+        color: black !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .table-header-week {
+        background-color: #f3f4f6 !important;
+        color: black !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        border-bottom: 1px solid #9ca3af !important;
+    }
+
+    /* --- NOVA TENTATIVA DE IMPRESSÃO --- */
+    /* Em vez de esconder selects/inputs, vamos estilizá-los como texto */
+    
+    input, select {
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        color: black !important; /* Garante que o texto seja preto */
+        font-size: 9pt !important;
+        font-family: inherit !important; /* Garante a mesma fonte */
+    }
+
+    /* Garante que as opções não sejam impressas */
+    select option {
+        display: none !important;
+    }
+    
+    /* Remove as setas (deve ser coberto pelo appearance:none, mas por via das dúvidas) */
+    select::-ms-expand { display: none !important; }
+    select::-webkit-scrollbar { display: none !important; }
+
+    /* Ajusta inputs de data */
+    input[type="date"] {
+        display: inline-block !important;
+        width: auto !important;
+        font-size: 9pt !important;
+    }
+    
+    /* Remove ícone de calendário do input[type=date] */
+    input[type="date"]::-webkit-inner-spin-button,
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        display: none !important;
+        -webkit-appearance: none !important;
+    }
+
+    /* Ajusta selects (auto-size não funciona no print) */
+    select.auto-size-select {
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    /* Remove os pseudo-elementos da tentativa anterior */
+    td:has(select)::after { content: none !important; }
+    td.flex-col::before { content: none !important; }
+    td.flex-col::after { content: none !important; }
+
+
+    /* Remove grupos e botões de edição */
+    .group, .edit-info-btn {
+        display: none !important;
+    }
+
+    /* Ajusta informações adicionais */
+    [data-info-display] {
+        font-size: 8pt !important;
+        color: #6b7280 !important;
+        margin-top: 1px !important;
+    }
+
+    /* Ajusta layout de células */
+    .flex, .flex-col {
+        display: block !important;
+    }
+
+    .gap-1, .gap-2 {
+        gap: 0 !important;
+    }
+    
+    td.flex-col select:last-child {
+        margin-top: 2px;
+    }
+
+    /* Ajusta células de portaria */
+    td:has(.flex-col) {
+        padding: 1px 2px !important;
+    }
+
+    /* Remove espaçamentos excessivos */
+    .p-2, .p-4, .p-6, .p-8 {
+        padding: 4px !important;
+    }
+
+    .py-4, .py-2, .py-1 {
+        padding-top: 2px !important;
+        padding-bottom: 2px !important;
+    }
+
+    .px-2, .px-1 {
+        padding-left: 3px !important;
+        padding-right: 3px !important;
+    }
+
+    .my-4, .mb-4, .mb-6 {
+        margin: 5px 0 !important;
+    }
+
     /* Configuração da página */
     @page {
         size: A4 landscape;
         margin: 10mm;
     }
-    
-    /* Garante cores legíveis */
-    body {
-        color: black !important;
-        background: white !important;
-        font-size: 10pt;
+
+    /* Garante que não haja quebras de página dentro das semanas */
+    tr {
+        page-break-inside: avoid;
+        break-inside: avoid;
     }
-    
-    /* Remove botões de edição (caso algum escape) */
-    .edit-info-btn {
-        display: none !important;
+
+    /* Ajusta font weights para melhor legibilidade na impressão */
+    .font-bold {
+        font-weight: 600 !important;
+    }
+
+    .font-semibold {
+        font-weight: 500 !important;
+    }
+
+    /* Remove cores azuis muito claras */
+    .text-blue-700 {
+        color: black !important;
+    }
+
+    /* Remove qualquer opacidade */
+    .opacity-0, .group-hover\:opacity-100 {
+        opacity: 1 !important;
     }
 }
     </style>
@@ -369,83 +519,84 @@
                     <th class="px-2 py-2">Preleitor</th>
                 </tr>`;
 
+
             // --- LÓGICA DE AUTENTICAÇÃO E BOTÕES ---
-                       // --- LÓGICA DE AUTENTICAÇÃO E BOTÕES ---
-            // Função para preparar dados para impressão
-            function prepareForPrint() {
-                console.log("Preparando para impressão...");
-                
-                // Salvar o conteúdo original
-                const originalScheduleBody = scheduleBody.innerHTML;
-                
-                // Criar uma cópia da tabela para impressão
-                const printClone = scheduleBody.cloneNode(true);
-                
-                // Substituir todos os selects e inputs por texto
-                printClone.querySelectorAll('select').forEach(select => {
-                    const selectedOption = select.options[select.selectedIndex];
-                    const textNode = document.createTextNode(selectedOption.text);
-                    select.parentNode.replaceChild(textNode, select);
-                });
-                
-                printClone.querySelectorAll('input[type="date"]').forEach(input => {
-                    const textNode = document.createTextNode(input.value);
-                    input.parentNode.replaceChild(textNode, input);
-                });
-                
-                // Remover botões de edição
-                printClone.querySelectorAll('.edit-info-btn, .add-culto-btn, .remove-week-culto-btn').forEach(btn => {
-                    btn.remove();
-                });
-                
-                // Substituir o conteúdo original pela versão para impressão
-                scheduleBody.innerHTML = printClone.innerHTML;
-                
-                return originalScheduleBody;
-            }
-
-            // Função para restaurar o conteúdo original
-            function restoreAfterPrint(originalContent) {
-                setTimeout(() => {
-                    scheduleBody.innerHTML = originalContent;
-                    console.log("Conteúdo restaurado após impressão");
-                    
-                    // Re-aplicar os event listeners se necessário
-                    if (isLoggedIn) {
-                        document.querySelectorAll('.edit-info-btn').forEach(btn => {
-                            btn.addEventListener('click', onEditInfoClick);
-                        });
-                    }
-                }, 1000);
-            }
-
-            printBtn.addEventListener('click', () => {
-                console.log("Botão imprimir clicado");
-                const originalContent = prepareForPrint();
-                
-                // Pequeno delay para garantir que o DOM foi atualizado
-                setTimeout(() => {
-                    window.print();
-                    restoreAfterPrint(originalContent);
-                }, 100);
-            });
-
-            reportBtn.addEventListener('click', () => {
-                console.log("Botão relatório clicado");
-                const originalContent = prepareForPrint();
-                
-                // Pequeno delay para garantir que o DOM foi atualizado
-                setTimeout(() => {
-                    window.print();
-                    restoreAfterPrint(originalContent);
-                }, 100);
-            });
+            printBtn.addEventListener('click', () => window.print());
+            reportBtn.addEventListener('click', () => window.print()); // NOVO LISTENER
 
             const checkAuth = () => {
                 isLoggedIn = sessionStorage.getItem('escala_loggedin') === 'true';
                 updateAuthUI();
             };
+
+            const updateAuthUI = () => {
+                if(isLoggedIn) {
+                    authBtn.innerHTML = logoutIconSVG;
+                    authBtn.setAttribute('title', 'Sair');
+                    authBtn.classList.replace('bg-green-500', 'bg-red-500');
+                    authBtn.classList.replace('hover:bg-green-600', 'hover:bg-red-600');
+                    saveScheduleBtn.classList.remove('hidden');
+                } else {
+                    authBtn.innerHTML = loginIconSVG;
+                    authBtn.setAttribute('title', 'Login para Editar');
+                    authBtn.classList.replace('bg-red-500', 'bg-green-500');
+                    authBtn.classList.replace('hover:bg-red-600', 'hover:bg-green-600');
+                    saveScheduleBtn.classList.add('hidden');
+                }
+            };
             
+            authBtn.addEventListener('click', (e) => {
+                if(isLoggedIn) {
+                    sessionStorage.removeItem('escala_loggedin');
+                    checkAuth();
+                    renderSchedule(parseInt(yearInput.value), parseInt(monthSelect.value));
+                } else {
+                    authContainer.classList.remove('hidden');
+                    authContainer.classList.add('flex');
+                }
+            });
+
+            cancelLoginBtn.addEventListener('click', () => { authContainer.classList.add('hidden'); authContainer.classList.remove('flex'); });
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                loginError.classList.add('hidden');
+                if (document.getElementById('username').value === 'cgcapoeira' && document.getElementById('password').value === '3458') {
+                    sessionStorage.setItem('escala_loggedin', 'true');
+                    authContainer.classList.add('hidden');
+                    authContainer.classList.remove('flex');
+                    checkAuth();
+                    renderSchedule(parseInt(yearInput.value), parseInt(monthSelect.value));
+                } else {
+                    loginError.classList.remove('hidden');
+                }
+            });
+
+            // --- LÓGICA DAS ABAS ---
+            tabEditor.addEventListener('click', () => {
+                editorView.classList.remove('hidden');
+                savedSchedulesView.classList.add('hidden');
+                tabEditor.classList.add('tab-active');
+                tabSaved.classList.remove('tab-active');
+            });
+
+            tabSaved.addEventListener('click', () => {
+                savedSchedulesView.classList.remove('hidden');
+                editorView.classList.add('hidden');
+                tabSaved.classList.add('tab-active');
+                tabEditor.classList.remove('tab-active');
+                loadSavedSchedules();
+            });
+
+            // --- LÓGICA FIREBASE (SALVAR/CARREGAR/DELETAR) ---
+            saveScheduleBtn.addEventListener('click', saveScheduleToFirebase);
+
+            async function saveScheduleToFirebase() {
+                if (!schedulesCollection) { alert("Erro de conexão com o Firebase."); return; }
+                
+                try {
+                    const month = parseInt(monthSelect.value);
+                    const year = parseInt(yearInput.value);
+                    const scheduleId = `${year}-${String(month + 1).padStart(2, '0')}`;
                     
                     const scheduleData = { month, year, scheduleName: `${months[month]} de ${year}`, weeks: [] };
 
@@ -565,6 +716,13 @@
                 element.style.width = `${textWidthHelper.scrollWidth + 10}px`;
             }
 
+            // FUNÇÃO REMOVIDA
+            /*
+            function updatePrintValue(selectElement) {
+                // ...
+            }
+            */
+
             function requestPasswordConfirmation(callback) {
                 onPasswordConfirm = callback;
                 confirmPasswordInput.value = '';
@@ -626,10 +784,13 @@
                     scheduleBody.querySelectorAll(`tr[data-week-index="${currentWeekForModal}"]`).forEach(r => lastRowInWeek = r);
                     lastRowInWeek.insertAdjacentElement('afterend', newRow);
 
+                    // ATUALIZAÇÃO: Remover listeners de 'updatePrintValue'
                     newRow.querySelectorAll('select.auto-size-select').forEach(select => {
                         autoSizeSelect(select);
+                        // updatePrintValue(select); // REMOVIDO
                         select.addEventListener('change', () => {
                             autoSizeSelect(select);
+                            // updatePrintValue(select); // REMOVIDO
                         });
                     });
                     newRow.querySelector('.edit-info-btn').addEventListener('click', onEditInfoClick);
@@ -804,10 +965,13 @@
                     removeCultoModal.style.display = 'flex';
                 }));
                 
+                // ATUALIZAÇÃO: Remover 'updatePrintValue'
                 document.querySelectorAll('select.auto-size-select').forEach(select => {
                     autoSizeSelect(select);
+                    // updatePrintValue(select); // REMOVIDO
                     select.addEventListener('change', () => {
                         autoSizeSelect(select);
+                        // updatePrintValue(select); // REMOVIDO
                     });
                 });
 
@@ -820,6 +984,9 @@
                         select.dataset.previousValue = select.value;
                     });
                     select.addEventListener('change', (e) => {
+                        // ATUALIZAÇÃO: Remover 'updatePrintValue'
+                        // updatePrintValue(e.target); // REMOVIDO
+                        
                         const currentSelect = e.target;
                         if (currentSelect.value === '__outro__') {
                             const newName = prompt("Digite o nome do novo preleitor:");
@@ -849,9 +1016,11 @@
                                 }
                                 currentSelect.value = trimmedName;
                                 autoSizeSelect(currentSelect);
+                                // updatePrintValue(currentSelect); // REMOVIDO
                             } else {
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
+                                // updatePrintValue(currentSelect); // REMOVIDO
                             }
                         } else if (currentSelect.value === '__deletar__') {
                             const nameToDelete = prompt("Digite o nome EXATO do preleitor que deseja deletar:");
@@ -859,6 +1028,7 @@
                             if (!nameToDelete || nameToDelete.trim() === '') {
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
+                                // updatePrintValue(currentSelect); // REMOVIDO
                                 return;
                             }
                             
@@ -868,6 +1038,7 @@
                                 alert("Você não pode deletar a opção 'A DEFINIR'.");
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
+                                // updatePrintValue(currentSelect); // REMOVIDO
                                 return;
                             }
                             
@@ -875,6 +1046,7 @@
                                 alert("Você não pode deletar um nome da lista original.");
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
+                                // updatePrintValue(currentSelect); // REMOVIDO
                                 return;
                             }
                             
@@ -892,10 +1064,12 @@
                                 alert(`"${trimmedName}" foi removido com sucesso.`);
                                 currentSelect.value = 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
+                                // updatePrintValue(currentSelect); // REMOVIDO
                             } else {
                                 alert(`Nome "${trimmedName}" não encontrado na lista de nomes cadastrados.`);
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
+                                // updatePrintValue(currentSelect); // REMOVIDO
                             }
                         }
                     });
