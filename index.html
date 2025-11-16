@@ -94,10 +94,10 @@
                 font-size: 10pt !important;
             }
             
-            .print-title-container {
+          .print-title-container {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     background: linear-gradient(135deg, #1e40af, #3b82f6) !important;
     color: white !important;
     font-weight: bold !important;
@@ -106,16 +106,20 @@
     border: 2px solid #1e3a8a !important;
     margin-bottom: 8px !important;
     border-radius: 4px !important;
-    gap: 15px;
+    position: relative;
 }
 
 .print-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     margin: 0 !important;
 }
 
 /* Logo na impressão */
 .print-logo {
     height: 35px;
+    margin-left: 20px;
 }
             
             .month-year-reference {
