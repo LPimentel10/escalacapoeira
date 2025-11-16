@@ -23,196 +23,182 @@
             background-image: none;
         }
 
-      @media print {
-    body {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        background-color: white;
-        font-size: 10pt;
-        line-height: 1.2;
-    }
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                background-color: white;
+                font-size: 10pt;
+                line-height: 1.2;
+            }
 
-    /* ESCONDE ELEMENTOS DA UI */
-    #header-buttons, #auth-container, .border-b, footer, 
-    .remove-week-culto-btn, .add-culto-btn, #add-culto-modal, 
-    #remove-culto-modal, #tab-saved, #password-confirm-modal,
-    #logo-container, #month-year-controls, .print-hidden-controls { /* Adicionado #month-year-controls e .print-hidden-controls */
-        display: none !important;
-    }
+            /* ESCONDE ELEMENTOS DA UI */
+            #header-buttons, #auth-container, .border-b, footer, 
+            .remove-week-culto-btn, .add-culto-btn, #add-culto-modal, 
+            #remove-culto-modal, #tab-saved, #password-confirm-modal,
+            #logo-container, #month-year-controls, .print-hidden-controls {
+                display: none !important;
+            }
 
-    body, #main-content, #main-content > div {
-        padding: 0 !important;
-        margin: 0 !important;
-        width: 100% !important;
-    }
-    
-    #main-content > div {
-        max-width: 100% !important;
-        box-shadow: none !important;
-    }
+            body, #main-content, #main-content > div {
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+            
+            #main-content > div {
+                max-width: 100% !important;
+                box-shadow: none !important;
+            }
 
-    /* Remove sombras e bordas arredondadas */
-    .shadow-md, .rounded-t-lg, .rounded-b-lg, .rounded-lg {
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        border: none !important;
-    }
-    
-    /* Melhora a aparência dos cabeçalhos */
-    .bg-blue-500 {
-        background-color: #d1d5db !important;
-        color: black !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
+            /* Remove sombras e bordas arredondadas */
+            .shadow-md, .rounded-t-lg, .rounded-b-lg, .rounded-lg {
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                border: none !important;
+            }
+            
+            /* CORREÇÃO PRINCIPAL: Esconde selects e mostra apenas o texto selecionado */
+            select, input[type="date"] {
+                display: none !important;
+            }
+            
+            /* Mostra o texto selecionado dos selects */
+            td:has(select)::after {
+                content: attr(data-print-value);
+                display: block !important;
+                color: black !important;
+                font-size: 9pt !important;
+                text-align: center !important;
+            }
+            
+            /* Para células com múltiplos selects (portaria) */
+            td.flex-col::before {
+                content: attr(data-print-value1);
+                display: block !important;
+                color: black !important;
+                font-size: 9pt !important;
+                text-align: center !important;
+            }
+            
+            td.flex-col::after {
+                content: attr(data-print-value2);
+                display: block !important;
+                color: black !important;
+                font-size: 9pt !important;
+                text-align: center !important;
+                margin-top: 2px !important;
+            }
 
-    .bg-blue-200 {
-        background-color: #e5e7eb !important;
-        color: black !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-    
-    .table-header-week {
-        background-color: #f3f4f6 !important;
-        color: black !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        border-bottom: 1px solid #9ca3af !important;
-    }
+            /* Para inputs de data */
+            td:has(input[type="date"])::after {
+                content: attr(data-print-value);
+                display: block !important;
+                color: black !important;
+                font-size: 9pt !important;
+                text-align: center !important;
+            }
 
-    /* --- NOVA TENTATIVA DE IMPRESSÃO --- */
-    /* Em vez de esconder selects/inputs, vamos estilizá-los como texto */
-    
-    input, select {
-        -webkit-appearance: none !important;
-        -moz-appearance: none !important;
-        appearance: none !important;
-        background-color: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        color: black !important; /* Garante que o texto seja preto */
-        font-size: 9pt !important;
-        font-family: inherit !important; /* Garante a mesma fonte */
-    }
+            /* Melhora a aparência dos cabeçalhos */
+            .bg-blue-500 {
+                background-color: #d1d5db !important;
+                color: black !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
 
-    /* Garante que as opções não sejam impressas */
-    select option {
-        display: none !important;
-    }
-    
-    /* Remove as setas (deve ser coberto pelo appearance:none, mas por via das dúvidas) */
-    select::-ms-expand { display: none !important; }
-    select::-webkit-scrollbar { display: none !important; }
+            .bg-blue-200 {
+                background-color: #e5e7eb !important;
+                color: black !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .table-header-week {
+                background-color: #f3f4f6 !important;
+                color: black !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                border-bottom: 1px solid #9ca3af !important;
+            }
 
-    /* Ajusta inputs de data */
-    input[type="date"] {
-        display: inline-block !important;
-        width: auto !important;
-        font-size: 9pt !important;
-    }
-    
-    /* Remove ícone de calendário do input[type=date] */
-    input[type="date"]::-webkit-inner-spin-button,
-    input[type="date"]::-webkit-calendar-picker-indicator {
-        display: none !important;
-        -webkit-appearance: none !important;
-    }
+            /* Remove grupos e botões de edição */
+            .group, .edit-info-btn {
+                display: none !important;
+            }
 
-    /* Ajusta selects (auto-size não funciona no print) */
-    select.auto-size-select {
-        width: 100% !important;
-        text-align: center !important;
-    }
+            /* Ajusta informações adicionais */
+            [data-info-display] {
+                font-size: 8pt !important;
+                color: #6b7280 !important;
+                margin-top: 1px !important;
+            }
 
-    /* Remove os pseudo-elementos da tentativa anterior */
-    td:has(select)::after { content: none !important; }
-    td.flex-col::before { content: none !important; }
-    td.flex-col::after { content: none !important; }
+            /* Ajusta layout de células */
+            .flex, .flex-col {
+                display: block !important;
+            }
 
+            .gap-1, .gap-2 {
+                gap: 0 !important;
+            }
 
-    /* Remove grupos e botões de edição */
-    .group, .edit-info-btn {
-        display: none !important;
-    }
+            /* Ajusta células de portaria */
+            td:has(.flex-col) {
+                padding: 1px 2px !important;
+                position: relative !important;
+            }
 
-    /* Ajusta informações adicionais */
-    [data-info-display] {
-        font-size: 8pt !important;
-        color: #6b7280 !important;
-        margin-top: 1px !important;
-    }
+            /* Remove espaçamentos excessivos */
+            .p-2, .p-4, .p-6, .p-8 {
+                padding: 4px !important;
+            }
 
-    /* Ajusta layout de células */
-    .flex, .flex-col {
-        display: block !important;
-    }
+            .py-4, .py-2, .py-1 {
+                padding-top: 2px !important;
+                padding-bottom: 2px !important;
+            }
 
-    .gap-1, .gap-2 {
-        gap: 0 !important;
-    }
-    
-    td.flex-col select:last-child {
-        margin-top: 2px;
-    }
+            .px-2, .px-1 {
+                padding-left: 3px !important;
+                padding-right: 3px !important;
+            }
 
-    /* Ajusta células de portaria */
-    td:has(.flex-col) {
-        padding: 1px 2px !important;
-    }
+            .my-4, .mb-4, .mb-6 {
+                margin: 5px 0 !important;
+            }
 
-    /* Remove espaçamentos excessivos */
-    .p-2, .p-4, .p-6, .p-8 {
-        padding: 4px !important;
-    }
+            /* Configuração da página */
+            @page {
+                size: A4 landscape;
+                margin: 10mm;
+            }
 
-    .py-4, .py-2, .py-1 {
-        padding-top: 2px !important;
-        padding-bottom: 2px !important;
-    }
+            /* Garante que não haja quebras de página dentro das semanas */
+            tr {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
 
-    .px-2, .px-1 {
-        padding-left: 3px !important;
-        padding-right: 3px !important;
-    }
+            /* Ajusta font weights para melhor legibilidade na impressão */
+            .font-bold {
+                font-weight: 600 !important;
+            }
 
-    .my-4, .mb-4, .mb-6 {
-        margin: 5px 0 !important;
-    }
+            .font-semibold {
+                font-weight: 500 !important;
+            }
 
-    /* Configuração da página */
-    @page {
-        size: A4 landscape;
-        margin: 10mm;
-    }
+            /* Remove cores azuis muito claras */
+            .text-blue-700 {
+                color: black !important;
+            }
 
-    /* Garante que não haja quebras de página dentro das semanas */
-    tr {
-        page-break-inside: avoid;
-        break-inside: avoid;
-    }
-
-    /* Ajusta font weights para melhor legibilidade na impressão */
-    .font-bold {
-        font-weight: 600 !important;
-    }
-
-    .font-semibold {
-        font-weight: 500 !important;
-    }
-
-    /* Remove cores azuis muito claras */
-    .text-blue-700 {
-        color: black !important;
-    }
-
-    /* Remove qualquer opacidade */
-    .opacity-0, .group-hover\:opacity-100 {
-        opacity: 1 !important;
-    }
-}
+            /* Remove qualquer opacidade */
+            .opacity-0, .group-hover\:opacity-100 {
+                opacity: 1 !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -519,10 +505,71 @@
                     <th class="px-2 py-2">Preleitor</th>
                 </tr>`;
 
-
             // --- LÓGICA DE AUTENTICAÇÃO E BOTÕES ---
-            printBtn.addEventListener('click', () => window.print());
-            reportBtn.addEventListener('click', () => window.print()); // NOVO LISTENER
+            // Função para preparar dados para impressão
+            function prepareForPrint() {
+                // Para selects normais
+                document.querySelectorAll('select.auto-size-select').forEach(select => {
+                    const selectedOption = select.options[select.selectedIndex];
+                    const parentTd = select.closest('td');
+                    if (parentTd) {
+                        parentTd.setAttribute('data-print-value', selectedOption.text);
+                    }
+                });
+                
+                // Para células de portaria com dois selects
+                document.querySelectorAll('td.flex-col').forEach(td => {
+                    const selects = td.querySelectorAll('select');
+                    if (selects.length >= 2) {
+                        const value1 = selects[0].options[selects[0].selectedIndex].text;
+                        const value2 = selects[1].options[selects[1].selectedIndex].text;
+                        td.setAttribute('data-print-value1', value1);
+                        td.setAttribute('data-print-value2', value2);
+                    }
+                });
+                
+                // Para inputs de data
+                document.querySelectorAll('input[type="date"]').forEach(input => {
+                    const parentTd = input.closest('td');
+                    if (parentTd) {
+                        parentTd.setAttribute('data-print-value', input.value);
+                    }
+                });
+            }
+
+            printBtn.addEventListener('click', () => {
+                prepareForPrint();
+                setTimeout(() => {
+                    window.print();
+                    // Restaurar estado após impressão
+                    setTimeout(() => {
+                        document.querySelectorAll('[data-print-value]').forEach(el => {
+                            el.removeAttribute('data-print-value');
+                        });
+                        document.querySelectorAll('[data-print-value1], [data-print-value2]').forEach(el => {
+                            el.removeAttribute('data-print-value1');
+                            el.removeAttribute('data-print-value2');
+                        });
+                    }, 1000);
+                }, 100);
+            });
+
+            reportBtn.addEventListener('click', () => {
+                prepareForPrint();
+                setTimeout(() => {
+                    window.print();
+                    // Restaurar estado após impressão
+                    setTimeout(() => {
+                        document.querySelectorAll('[data-print-value]').forEach(el => {
+                            el.removeAttribute('data-print-value');
+                        });
+                        document.querySelectorAll('[data-print-value1], [data-print-value2]').forEach(el => {
+                            el.removeAttribute('data-print-value1');
+                            el.removeAttribute('data-print-value2');
+                        });
+                    }, 1000);
+                }, 100);
+            });
 
             const checkAuth = () => {
                 isLoggedIn = sessionStorage.getItem('escala_loggedin') === 'true';
@@ -716,13 +763,6 @@
                 element.style.width = `${textWidthHelper.scrollWidth + 10}px`;
             }
 
-            // FUNÇÃO REMOVIDA
-            /*
-            function updatePrintValue(selectElement) {
-                // ...
-            }
-            */
-
             function requestPasswordConfirmation(callback) {
                 onPasswordConfirm = callback;
                 confirmPasswordInput.value = '';
@@ -784,13 +824,10 @@
                     scheduleBody.querySelectorAll(`tr[data-week-index="${currentWeekForModal}"]`).forEach(r => lastRowInWeek = r);
                     lastRowInWeek.insertAdjacentElement('afterend', newRow);
 
-                    // ATUALIZAÇÃO: Remover listeners de 'updatePrintValue'
                     newRow.querySelectorAll('select.auto-size-select').forEach(select => {
                         autoSizeSelect(select);
-                        // updatePrintValue(select); // REMOVIDO
                         select.addEventListener('change', () => {
                             autoSizeSelect(select);
-                            // updatePrintValue(select); // REMOVIDO
                         });
                     });
                     newRow.querySelector('.edit-info-btn').addEventListener('click', onEditInfoClick);
@@ -965,13 +1002,10 @@
                     removeCultoModal.style.display = 'flex';
                 }));
                 
-                // ATUALIZAÇÃO: Remover 'updatePrintValue'
                 document.querySelectorAll('select.auto-size-select').forEach(select => {
                     autoSizeSelect(select);
-                    // updatePrintValue(select); // REMOVIDO
                     select.addEventListener('change', () => {
                         autoSizeSelect(select);
-                        // updatePrintValue(select); // REMOVIDO
                     });
                 });
 
@@ -984,9 +1018,6 @@
                         select.dataset.previousValue = select.value;
                     });
                     select.addEventListener('change', (e) => {
-                        // ATUALIZAÇÃO: Remover 'updatePrintValue'
-                        // updatePrintValue(e.target); // REMOVIDO
-                        
                         const currentSelect = e.target;
                         if (currentSelect.value === '__outro__') {
                             const newName = prompt("Digite o nome do novo preleitor:");
@@ -1016,11 +1047,9 @@
                                 }
                                 currentSelect.value = trimmedName;
                                 autoSizeSelect(currentSelect);
-                                // updatePrintValue(currentSelect); // REMOVIDO
                             } else {
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                // updatePrintValue(currentSelect); // REMOVIDO
                             }
                         } else if (currentSelect.value === '__deletar__') {
                             const nameToDelete = prompt("Digite o nome EXATO do preleitor que deseja deletar:");
@@ -1028,7 +1057,6 @@
                             if (!nameToDelete || nameToDelete.trim() === '') {
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                // updatePrintValue(currentSelect); // REMOVIDO
                                 return;
                             }
                             
@@ -1038,7 +1066,6 @@
                                 alert("Você não pode deletar a opção 'A DEFINIR'.");
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                // updatePrintValue(currentSelect); // REMOVIDO
                                 return;
                             }
                             
@@ -1046,7 +1073,6 @@
                                 alert("Você não pode deletar um nome da lista original.");
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                // updatePrintValue(currentSelect); // REMOVIDO
                                 return;
                             }
                             
@@ -1064,12 +1090,10 @@
                                 alert(`"${trimmedName}" foi removido com sucesso.`);
                                 currentSelect.value = 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                // updatePrintValue(currentSelect); // REMOVIDO
                             } else {
                                 alert(`Nome "${trimmedName}" não encontrado na lista de nomes cadastrados.`);
                                 currentSelect.value = currentSelect.dataset.previousValue || 'A DEFINIR';
                                 autoSizeSelect(currentSelect);
-                                // updatePrintValue(currentSelect); // REMOVIDO
                             }
                         }
                     });
