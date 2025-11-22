@@ -49,10 +49,10 @@
                 background: white !important;
             }
             
-            /* Configuração da página - A4 LANDSCAPE */
+            /* Configuração da página - A4 PORTRAIT */
             @page {
-                size: A4 landscape;
-                margin: 5mm;
+                size: A4 portrait;
+                margin: 1mm;
             }
             
             /* Garante cores legíveis */
@@ -60,7 +60,7 @@
                 color: black !important;
                 background: white !important;
                 font-size: 9pt !important;
-                line-height: 1.1;
+                line-height: 1.3;
             }
             
             /* Estilos da tabela de impressão */
@@ -74,10 +74,10 @@
             
             #print-table td, #print-table th {
                 border: 1px solid #94a3b8 !important;
-                padding: 4px 3px !important;
+                padding: 8px 4px !important;
                 text-align: center !important;
                 vertical-align: middle !important;
-                line-height: 1.1 !important;
+                line-height: 1.3 !important;
             }
             
             #print-table th {
@@ -101,11 +101,11 @@
     background: linear-gradient(135deg, #1e40af, #3b82f6) !important;
     color: white !important;
     font-weight: bold !important;
-    font-size: 14pt !important;
-    padding: 10px !important;
+    font-size: 12pt !important;
+    padding: 6px !important;
     border: 2px solid #1e3a8a !important;
-    margin-bottom: 8px !important;
-    border-radius: 4px !important;
+    margin-bottom: 4px !important;
+    border-radius: 3px !important;
     position: relative;
 }
 
@@ -115,9 +115,9 @@
 
 /* Logo na impressão */
 .print-logo {
-    height: 35px;
+    height: 25px;
     position: absolute;
-    left: 20px;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -126,12 +126,12 @@
                 background: #f8fafc !important;
                 color: #1e40af !important;
                 font-weight: bold !important;
-                font-size: 11pt !important;
+                font-size: 10pt !important;
                 text-align: center !important;
-                padding: 6px !important;
+                padding: 3px !important;
                 border: 1px solid #cbd5e1 !important;
-                margin-bottom: 5px !important;
-                border-radius: 3px !important;
+                margin-bottom: 3px !important;
+                border-radius: 2px !important;
             }
             
             /* Cores para tipos de culto */
@@ -167,7 +167,7 @@
             
             /* Estilo para informações adicionais */
             .info-text {
-                font-size: 7pt !important;
+                font-size: 6pt !important;
                 font-style: italic;
                 color: #64748b !important;
                 margin-top: 2px !important;
@@ -525,7 +525,8 @@
                 // Processar cada semana
                 scheduleBody.querySelectorAll('tr[data-week-num]').forEach(weekHeader => {
                     const weekNum = parseInt(weekHeader.dataset.weekNum);
-                    const weekName = weekHeader.querySelector('td').childNodes[0].textContent.trim();
+                    // Criar o nome da semana diretamente
+                    const weekName = `${weekNames[weekNum]} SEMANA DE ${months[month].toUpperCase()}`;
                     
                     const weekData = {
                         name: weekName,
@@ -598,8 +599,9 @@
                     `;
                     printBody.appendChild(columnsHeader);
                     
-                    // Serviços da semana
-                    week.services.forEach(service => {
+                    // Serviços da semana ordenados por data
+                    const sortedServices = week.services.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    sortedServices.forEach(service => {
                         const serviceRow = document.createElement('tr');
                         
                         // Determinar classe de cor baseada no tipo de culto
@@ -623,11 +625,6 @@
                         `;
                         printBody.appendChild(serviceRow);
                     });
-                    
-                    // Linha em branco entre semanas
-                    const spacerRow = document.createElement('tr');
-                    spacerRow.innerHTML = '<td colspan="6" style="height: 8px; background: transparent !important;"></td>';
-                    printBody.appendChild(spacerRow);
                 });
                 
                 console.log("✅ Preparação para impressão concluída");
@@ -748,7 +745,7 @@
                     scheduleBody.querySelectorAll('tr[data-week-num]').forEach(headerRow => {
                         const weekNum = parseInt(headerRow.dataset.weekNum);
                         scheduleData.weeks[weekNum] = {
-                            weekName: headerRow.querySelector('td').childNodes[0].textContent.trim(),
+                            weekName: `${weekNames[weekNum]} SEMANA DE ${months[month].toUpperCase()}`,
                             services: []
                         };
                     });
@@ -1073,7 +1070,9 @@
                     scheduleData.weeks.forEach((week, weekIndex) => {
                         createWeekHeader(weekIndex, week.weekName);
                         if(week.services) {
-                            week.services.forEach(service => scheduleBody.appendChild(createServiceRow(weekIndex, service, disabledState)));
+                            // Ordenar serviços por data
+                            const sortedServices = week.services.sort((a, b) => new Date(a.date) - new Date(b.date));
+                            sortedServices.forEach(service => scheduleBody.appendChild(createServiceRow(weekIndex, service, disabledState)));
                         }
                     });
                 } else {
@@ -1081,8 +1080,10 @@
                     const daysInMonth = new Date(year, month + 1, 0).getDate();
                     const firstDayOfWeek = firstDay.getDay();
 
+                    // Coletar todos os serviços do mês
+                    const allServices = [];
+
                     for (let weekIndex = 0; weekIndex < 6; weekIndex++) {
-                        const weekRows = [];
                         cultDaysOrder.forEach(dayOfWeek => {
                             const firstDateOfWeek = 1 + (dayOfWeek - firstDayOfWeek + 7) % 7;
                             const day = firstDateOfWeek + (weekIndex * 7);
@@ -1100,7 +1101,8 @@
                                     info: '',
                                     portaria: 'A DEFINIR', 
                                     direcao: 'A DEFINIR', 
-                                    preleitor: 'A DEFINIR'
+                                    preleitor: 'A DEFINIR',
+                                    weekIndex
                                 };
                                 
                                 if (month === 9 && octoberData[weekIndex] && octoberData[weekIndex][dayOfWeek]) {
@@ -1110,16 +1112,24 @@
                                     serviceData.preleitor = data.preleitor;
                                 }
 
-                                weekRows.push(createServiceRow(weekIndex, serviceData, disabledState));
+                                allServices.push(serviceData);
                             }
                         });
-                        
-                        if (weekRows.length > 0) {
-                            const name = `${weekNames[weekIndex]} SEMANA DE ${months[month].toUpperCase()}`;
-                            createWeekHeader(weekIndex, name);
-                            weekRows.forEach(row => scheduleBody.appendChild(row));
-                        }
                     }
+                    
+                    // Ordenar todos os serviços por data
+                    allServices.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    
+                    // Agrupar por semana mantendo a ordem cronológica
+                    let currentWeek = -1;
+                    allServices.forEach(service => {
+                        if (service.weekIndex !== currentWeek) {
+                            currentWeek = service.weekIndex;
+                            const name = `${weekNames[currentWeek]} SEMANA DE ${months[month].toUpperCase()}`;
+                            createWeekHeader(currentWeek, name);
+                        }
+                        scheduleBody.appendChild(createServiceRow(service.weekIndex, service, disabledState));
+                    });
                 }
                 
                 // --- ADICIONAR EVENT LISTENERS DINÂMICOS ---
